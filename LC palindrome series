@@ -1,4 +1,12 @@
 # Palindrome 系列
+5 Longest Palindromic Substring  
+9 Palindrome Number  
+125 Valid Palindrome  
+131 Palindrome Partitioning  
+132 Palindrome Partitioning II  
+214 Shortest Palindrome  
+336 Palindrome Pairs  
+
 #### 5. Longest Palindromic Substring
 __Description__  
 Given a string S, find the longest palindromic substring in S. You may assume that the maximum length of S is 1000, and there exists one unique longest palindromic substring.  
