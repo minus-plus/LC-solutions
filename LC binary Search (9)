@@ -450,6 +450,46 @@ public class Solution {
     }
 }
 ```
+#### 154. Find Minimum in Rotated Sorted Array II 
+
+__Description__   
+>Follow up for "Find Minimum in Rotated Sorted Array":
+>What if duplicates are allowed?
+>
+>Would this affect the run-time complexity? How and why?
+
+
+__Solution__ 
+
+**思路1**  
+首先想到binary search。但因为数组有重复，需要特殊处理。  
+要用到递归。 先判断是否升序，升序return start。 
+divide to left and right, earch both, return min.
+
+**代码**  
+**思路1**  
+
+**思路2**  
+```jav
+public class Solution {
+    public int search(int[] nums, int l, int r) {
+        if (l >= r) {
+            return nums[l];
+        }
+        if (nums[l] < nums[r]) {
+            return nums[l];
+        }
+        int mid = l + (r - l) / 2;
+        int left = search(nums, l, mid);
+        int right = search(nums, mid + 1, r);
+        return Math.min(left, right);
+    }
+    public int findMin(int[] nums) {
+        return search(nums, 0, nums.length - 1);
+    }
+}
+```
+
 
 #### 240. Search a 2D Matrix II 
 
@@ -547,6 +587,7 @@ public class Solution {
     }
 }
 ```
+
 
 
 
