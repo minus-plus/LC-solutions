@@ -1,0 +1,214 @@
+33 Search in Rotated Sorted Array  
+34 Search for a Range  
+35 Search Insert Position  
+69 Sqrt(x)  
+74 Search a 2D Matrix  
+81 Search in Rotated Sorted Array II  
+153 Find Minimum in Rotated Sorted Array  
+154 Find Minimum in Rotated Sorted Array II  
+240 Search a 2D Matrix II  
+
+#### 33. Search in Rotated Sorted Array 
+
+__Description__   
+Suppose a sorted array is rotated at some pivot unknown to you beforehand.
+
+(i.e., `0 1 2 4 5 6 7` might become `4 5 6 7 0 1 2`).
+
+You are given a target value to search. If found in the array return its index, otherwise return -1.
+
+You may assume no duplicate exists in the array.
+__Solution__  
+**思路**  
+虽然rotated array局部可能有一个点反序，但整体还是有序的，考虑用binary search。
+假设pivot将数组分为前后两个升序部分，mid与start and end的关系有几种情况。
+mid > start，mid肯定位于前半个升序部分。
+mid < start, mid肯定位于后半个升序部分。
+先比较target与end的关系，看target位于哪一个部分。再比较target与mid，mid与end的关系，看舍弃哪一部分。
+
+ 
+```java
+public class Solution {
+    public int search(int[] nums, int target) {
+        if (nums == null || nums.length == 0) {
+            return -1;
+        }
+        
+        int start = 0;
+        int end = nums.length - 1; 
+        while (start + 1 < end) {
+            int mid = start + (end - start) / 2;
+            if (target > nums[end]) { //target on start side
+                if (nums[mid] < target  && nums[mid] > nums[end]) {
+                    start = mid;
+                } else {
+                    end = mid;
+                }
+            } else if (target < nums[end]){ // target on end side
+                if (nums[mid] > target && nums[mid] < nums[end]) {
+                    end = mid;
+                } else  {
+                    start = mid;
+                }
+            } else {
+                return end;
+            }
+        }
+        if (nums[start] == target) {
+            return start;
+        } 
+        if (nums[end] == target) {
+            return end;
+        }
+        return -1;
+    }
+}
+```
+
+#### 34. Search for a Range 
+
+__Description__   
+>Given a sorted array of integers, find the starting and ending position of a given target value.  
+Your algorithm's runtime complexity must be in the order of O(log n).  
+If the target is not found in the array, return [-1, -1].    
+For example,  
+Given [5, 7, 7, 8, 8, 10] and target value 8,  
+return [3, 4].  
+
+**Solution**  
+两次二分搜索。找到第一个target和最后一个的位置。  
+```
+1 2 3 3 3 4 5 
+      ^
+	 mid
+```
+**思路：**    
+target 的position 是第一个还是最后一个，取决于当nums[mid] == target时，
+	end == mid (first), or  
+	start == mid (last)  
+__Solution__  
+
+```java
+public class Solution {
+    public int[] searchRange(int[] nums, int target) {
+        // binary search, get the first position of target and get the last position of target
+        int[] re = new int[2];
+        
+        int start = 0;
+        int end = nums.length - 1;
+        while (start + 1 < end) {
+            int mid = start + (end - start) / 2;
+            if (nums[mid] >= target) {
+                end = mid;
+            } else {
+                start = mid;
+            }
+        }
+        if (nums[start] == target) {
+            re[0] = start;
+        } else if (nums[end] == target) {
+            re[0] = end;
+        } else {
+            re[0] = -1;
+            re[1] = -1;
+            return re;
+        }
+        start = 0;
+        end = nums.length - 1;
+        while (start + 1 < end) {
+            int mid = start + (end - start) / 2;
+            if (nums[mid] > target) {
+                end = mid;
+            } else { // if nums[mid] == target, discard left side
+                start = mid;
+            }
+        }
+        if (nums[end] == target) {
+            re[1] = end;
+        } else if (nums[start] == target) {
+            re[1] = start;
+        } 
+        return re;
+    }
+}
+```
+#### 35. Search Insert Position 
+
+**Description**   
+>Given a sorted array and a target value, return the index if the target is found. If not, return the index where it would be if it were inserted in order.  
+You may assume no duplicates in the array.  
+Here are few examples.   
+`[1,3,5,6]`, 5 → 2  
+`[1,3,5,6]`, 2 → 1  
+`[1,3,5,6]`, 7 → 4  
+`[1,3,5,6]`, 0 → 0  
+
+
+**Solution**  
+**思路**  
+数组有序，二分搜索。
+if nums[mid] == target, return mid;
+若找不到target，不叫最后start, target and end的关系。
+```java
+public class Solution {
+    public int searchInsert(int[] nums, int target) {
+        // illegal conditions
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        int start = 0;  
+        int mid = 0;
+        int end = nums.length - 1;
+        while(end - start > 1) {
+            mid = start + (end - start) / 2;
+            if (nums[mid] < target) {
+                start = mid;
+            } else if (nums[mid] > target){
+                end = mid;
+            } else {
+                return mid;
+            }
+        }
+        if  (nums[start] > target) {
+            return start;
+        } else if (nums[end] > target) {
+            return end;
+        } else {
+            return end + 1;
+        }
+    }
+}
+```
+#### 69. Sqrt(x) 
+
+**Description**   
+Implement `int sqrt(int x)`.  
+**Solution**  
+**思路**  
+二分。find the largest n so that n * n <= x。比较时不能要用除法，n <= x / n。否则会越界。
+
+**代码**
+```java
+public class Solution {
+    public int mySqrt(int x) {
+        // find the largest n so that n * n <= x;
+        int start = 0;
+        int end = x / 2 + 1;
+        while (start + 1 < end) {
+            int mid = start + (end - start) / 2;
+            if (mid > x / mid) {
+                end = mid;
+            } else {
+                start = mid;
+            }
+        }
+        if (end <= x / end) {
+            return end;
+        }
+        return start;
+    }
+}
+```
+
+
+
