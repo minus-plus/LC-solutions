@@ -1,8 +1,9 @@
-31 Next Permutation
-46 Permutations
-47 Permutations II
-60 Permutation Sequence
- 
+>31 Next Permutation  
+>46 Permutations  
+>47 Permutations II  
+>60 Permutation Sequence  
+
+---
 
 #### 31. Next Permutation 
 
