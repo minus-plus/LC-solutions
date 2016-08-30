@@ -1,10 +1,8 @@
 # K sum 系列
-```
-1. Two Sum
-15. 3Sum
-16. 3Sum Closest
-18. 4Sum  
-```
+1 Two Sum  
+15 3Sum  
+16 3Sum Closest  
+18 4Sum    
 
 ---
 #### 1. Two Sum
