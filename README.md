@@ -1,5 +1,5 @@
-# LC-solutions
-#### Biary Search  
+# LC-solutions (122)
+#### Biary Search (9)
 33 Search in Rotated Sorted Array  
 34 Search for a Range  
 35 Search Insert Position  
@@ -10,13 +10,13 @@
 154 Find Minimum in Rotated Sorted Array II  
 240 Search a 2D Matrix II  
 
-#### K sum  
+#### K sum (4)
 1 Two Sum  
 15 3Sum  
 16 3Sum Closest  
 18 4Sum  
 
-#### Palindrome  
+#### Palindrome (7)
 5 Longest Palindromic Substring  
 9 Palindrome Number  
 125 Valid Palindrome  
@@ -25,7 +25,7 @@
 214 Shortest Palindrome  
 336 Palindrome Pairs  
 
-#### LinkedList  
+#### LinkedList (16)
 19 Remove Nth Node From End of List  
 21 Merge Two Sorted Lists  
 24 Swap Nodes in Pairs  
@@ -43,13 +43,13 @@
 234 Palindrome Linked List  
 237 Delete Node in a Linked List  
 
-#### Permutation  
+#### Permutation (4)  
 31 Next Permutation  
 46 Permutations  
 47 Permutations II  
 60 Permutation Sequence  
 
-#### DFS  
+#### DFS (12)  
 39 Combination Sum  
 40 Combination Sum II  
 51 N-Queens  
@@ -63,7 +63,7 @@
 241 Different Ways to Add Parentheses  
 282 Expression Add Operators  
 
-#### DP   
+#### DP (15)   
 53 Maximum Subarray  
 62 Unique Paths  
 63 Unique Paths II  
@@ -80,7 +80,7 @@
 213 House Robber II  
 221 Maximal Square    
 
-#### Math   
+#### Math (16)  
 43 Multiply Strings  
 50 Pow(x, n)  
 65 Valid Number  
@@ -98,7 +98,7 @@
 258 Add Digits  
 273 Integer to English Words    
 
-#### Tree   
+#### Tree (35)   
 94 Binary Tree Inorder Traversal  
 95 Unique Binary Search Trees II  
 96 Unique Binary Search Trees  
@@ -135,7 +135,7 @@
 257 Binary Tree Paths  
 297 Serialize and Deserialize Binary Tree    
 
-#### Best Time to Buy and Sell Stock  
+#### Best Time to Buy and Sell Stock (4) 
 121 Best Time to Buy and Sell Stock  
 122 Best Time to Buy and Sell Stock II  
 123 Best Time to Buy and Sell Stock III  
