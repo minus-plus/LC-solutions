@@ -1,4 +1,4 @@
-# LC-solutions (134)
+# LC-solutions (141)
 #### Biary Search (9)
 33 Search in Rotated Sorted Array  
 34 Search for a Range  
@@ -155,3 +155,11 @@
 341 Flatten Nested List Iterator  
 352 Data Stream as Disjoint Intervals  
 
+#### Bit Manipulation (7)
+136 Single Number  
+137 Single Number II  
+190 Reverse Bits  
+191 Number of 1 Bits  
+201 Bitwise AND of Numbers Range  
+260 Single Number III  
+268 Missing Number  
