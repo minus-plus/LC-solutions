@@ -1,4 +1,4 @@
-# LC-solutions (122)
+# LC-solutions (134)
 #### Biary Search (9)
 33 Search in Rotated Sorted Array  
 34 Search for a Range  
@@ -140,3 +140,18 @@
 122 Best Time to Buy and Sell Stock II  
 123 Best Time to Buy and Sell Stock III  
 188 Best Time to Buy and Sell Stock IV  
+
+#### Data Structure (12)
+146 LRU Cache  
+150 Evaluate Reverse Polish Notation  
+155 Min Stack  
+187 Repeated DNA Sequences  
+208 Implement Trie (Prefix Tree)  
+211 Add and Search Word – Data structure design  
+212 Word Search II
+218 The Skyline Problem   
+232 Implement Queue using Stacks  
+239 Sliding Window Maximum  
+341 Flatten Nested List Iterator  
+352 Data Stream as Disjoint Intervals  
+
