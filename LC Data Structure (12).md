@@ -508,7 +508,7 @@ public class WordDictionary {
 **Solution**   
 **思路**  
 此题与word search I都是用dfs (backtracking)解决。本题要求提高效率，用trie实现，将要查找的所有word放到trie中，这样dfs是每个节点不用再遍历所有word，而只要在trie中查找就好了。
-第一次写时，老是报错，找不到原因，后来发现在将word加入到list后直接返回了。。。返回了。。。为啥要返回啊！！！！！！ :scream:
+第一次写时，老是报错，找不到原因，后来发现在将word加入到list后直接返回了。。。返回了。。。为啥要返回啊！！！！！！ :scream::scream::scream::scream:
 
 **代码**   
 ```java
@@ -609,7 +609,7 @@ public class Solution {
 **思路**  
 直观方法，将rectangle的高度映射到x轴上，然后scan from left to right，高度变化的点就是要找的critical point。时间O(n^2)，空间左右rectangle的距离差。  
 改进：   
-**[非常详细得解释](https://briangordon.github.io/2014/08/the-skyline-problem.html)**   
+**[非常详细的>解释](https://briangordon.github.io/2014/08/the-skyline-problem.html)**   
 所有关键点都可能出现在最后的result的list中，从左到右扫描关键点，判定是否将该关键点加入到result list中。
 将关键点排序，因为关键点的x可能重复，排序按照：
 1. x大小。
@@ -821,19 +821,19 @@ public class Solution {
 #### 341. Flatten Nested List Iterator 
 
 __Description__   
-Given a nested list of integers, implement an iterator to flatten it.
-
-Each element is either an integer, or a list -- whose elements may also be integers or other lists.
-
-Example 1:
-Given the list [[1,1],2,[1,1]],
-
-By calling next repeatedly until hasNext returns false, the order of elements returned by next should be: [1,1,2,1,1].
-
-Example 2:
-Given the list [1,[4,[6]]],
-
-By calling next repeatedly until hasNext returns false, the order of elements returned by next should be: [1,4,6].
+>Given a nested list of integers, implement an iterator to flatten it.
+>
+>Each element is either an integer, or a list -- whose elements may also be integers or other lists.
+>
+>Example 1:
+>Given the list [[1,1],2,[1,1]],
+>
+>By calling next repeatedly until hasNext returns false, the order of elements returned by next should be: [1,1,2,1,1].
+>
+>Example 2:
+>Given the list [1,[4,[6]]],
+>
+>By calling next repeatedly until hasNext returns false, the order of elements returned by next should be: [1,4,6].
 
 
 __Solution__  
