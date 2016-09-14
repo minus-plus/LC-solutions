@@ -253,5 +253,43 @@ public class Solution {
 }
 ```
 * * *
+#### 268. Missing Number 
+
+**Description**   
+>Given an array containing n distinct numbers taken from 0, 1, 2, ..., n, find the one that is missing from the array.
+>
+>For example,
+>Given nums = [0, 1, 3] return 2.
+>
+>Note:
+>Your algorithm should run in linear runtime complexity. Could you implement it using only constant extra space complexity?
+
+**[题目链接](https://leetcode.com/problems/missing-number/)**    
+
+**Solution**   
+**思路**  
+xor。  
+two pass xor.第一遍扫描0 ~ n，第二遍扫描nums，return最后的结果。  
+
+**代码**   
+```java
+public class Solution {
+    public int missingNumber(int[] nums) {
+        // the largest number should be nums.length 
+        // first calculate sum
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        
+        int x = nums.length;
+        for (int i = 0; i < nums.length; i++) {
+            x ^= i;
+            x ^= nums[i];
+        }
+        return x;
+    }
+}
+```
+* * *
 
 
