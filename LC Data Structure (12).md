@@ -609,7 +609,7 @@ public class Solution {
 **思路**  
 直观方法，将rectangle的高度映射到x轴上，然后scan from left to right，高度变化的点就是要找的critical point。时间O(n^2)，空间左右rectangle的距离差。  
 改进：   
-**[非常详细的>解释](https://briangordon.github.io/2014/08/the-skyline-problem.html)**   
+**[非常详细的解释](https://briangordon.github.io/2014/08/the-skyline-problem.html)**   
 所有关键点都可能出现在最后的result的list中，从左到右扫描关键点，判定是否将该关键点加入到result list中。
 将关键点排序，因为关键点的x可能重复，排序按照：
 1. x大小。
