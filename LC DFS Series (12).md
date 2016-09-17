@@ -326,7 +326,7 @@ If nums = [1,2,3], a solution is:
 __Solution__    
 **思路**  
 思路1，首先想到DFS，但leaf node是什么呢，因为要找到所有可能的情况，意味着每个数本身和空集也是leaf node。结论就是所有的node都是leaf node!  
-思路2，借鉴来的，bit manipulation，总共有2^n个subset，比如第5个subset，对应二级制5为101，第1位和第3位为1，则选第一个和第三个数。
+思路2，借鉴来的，bit manipulation，总共有2^n个subset，比如第5个subset，对应二级制5为101，第1位和第3位为1，则选第一个和第三个数。  
 **代码**  
 __DFS__  
 ```java
@@ -522,8 +522,11 @@ __Description__
   []
 ]
 ```
+
+
 __Solution__    
-DFS. all nodes as leaf node. path作为摆渡船。 注意去重`i == current || nums[i] != nums[i-1]`。 
+DFS. all nodes as leaf node. path作为摆渡船。 注意去重`i == current || nums[i] != nums[i-1]`。   
+
 **代码**  
 ```java
 public class Solution {
@@ -836,11 +839,11 @@ public class Solution {
 **Solution**  
 **思路**  
 借鉴eval用stack计算值。  
-对于一个comming number num，看栈顶是：
-1. `null`，直接入栈
-2. `"*"`, `stack.pop()*num`入栈
-3. `"+"`, 将栈内所有元素pop求和，然后`num`入栈
-4. `"-"`,将栈内所有元素pop求和，然后`-num`入栈  
+对于一个comming number num，看栈顶是：  
+1 .`null`，直接入栈  
+2 .`"*"`, `stack.pop()*num`入栈  
+3 .`"+"`, 将栈内所有元素pop求和，然后`num`入栈  
+4 .`"-"`,将栈内所有元素pop求和，然后`-num`入栈    
 
 **其实stack的size最大是2.**在加入commingnumber之前，先将已遍历部分计算然后入栈。
 可用pre表示已经计算的值，val表示未被计算的值，参照eval从左到右扫描即可。  
