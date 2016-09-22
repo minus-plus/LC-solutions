@@ -1,4 +1,4 @@
-# LC-solutions (141)
+# LC-solutions (144)
 #### Biary Search (9)
 33 Search in Rotated Sorted Array  
 34 Search for a Range  
@@ -163,3 +163,8 @@
 201 Bitwise AND of Numbers Range  
 260 Single Number III  
 268 Missing Number  
+
+####  Contains Duplicates (3)
+217 Contains Duplicate  
+219 Contains Duplicate I   
+220 Contains Duplicate II  
