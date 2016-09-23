@@ -341,6 +341,7 @@ public class Solution {
     }
 }
 ```
+**error: 将label写成val，将RandomListNode写成ListNode.**   
 **思路2：**  
 copy list and split。将复制的node放在original node之后，这样就能用next指针找到random指向的对象了。完成之后将链表拆成两个。  
 copy list:
