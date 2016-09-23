@@ -165,7 +165,8 @@ For k = 3, you should return: `3->2->1->4->5`
  - 首先，快慢指针找到group的head and tail
  - 然后，将group反序，将tail重新定位到group的尾部。
  - 若move过程中遇到null(包括group最后一个)，结束group反序过程。    
- **代码，包括测试部分**  
+ 
+**代码，包括测试部分**  
 
 ```java
 
