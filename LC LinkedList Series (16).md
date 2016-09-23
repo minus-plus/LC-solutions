@@ -579,9 +579,8 @@ public class Solution {
 **Solution**    
 **思路**   
 原理不多赘述。  
-前置一个`dummy` node，方便`prev`变量指向。维护一个`tail`变量，指向已排序部分的尾部，方便删除`current`。    
+记录一个prev变量，若current.val >= prev.val,直接跳过。  
 **代码**  
-```java
 /**
  * Definition for singly-linked list.
  * public class ListNode {
@@ -595,25 +594,27 @@ public class Solution {
         if (head == null || head.next == null) {
             return head;
         }
-        ListNode dummy = new ListNode(-1);
+        ListNode dummy = new ListNode(Integer.MIN_VALUE);
         dummy.next = head;
-        ListNode prev = dummy;
-        ListNode tail = head;
-        ListNode current = tail.next;
+        ListNode prev = head;
+        ListNode current = head.next;
         while (current != null) {
-            ListNode next = current.next;
-            prev = dummy;
-            while (prev.next.val <= current.val && prev.next != tail) {
-                prev = prev.next;
-            }
-            if (prev != tail) {
-                tail.next = current.next;
-                current.next = prev.next;
-                prev.next = current;
+            if (current.val >= prev.val) {
+                prev = current;
+                current = current.next;
             } else {
-                tail = tail.next;
+                ListNode p1 = dummy;
+                ListNode p2 = dummy.next; // p2 = head  wrong answer。
+                while (current.val >= p2.val) {
+                    p1 = p1.next;
+                    p2 = p2.next;
+                }
+                ListNode temp = current.next;
+                prev.next = current.next;
+                p1.next = current;
+                current.next = p2;
+                current = temp;
             }
-            current = next;
         }
         return dummy.next;
     }
@@ -917,8 +918,7 @@ public class Solution {
     }
 }
 ```
-
-
-
-
+* * *
+变量赋值之前，一定要注意哪些变量是变得。比如147题24行，将p2 = head。这里的head的位置是变化的，导致出错。而dummy总在队头，应为p2 = dummy.next;  
+因此若片p1和p2为相邻指针，p1 = someNode, p2 = p1.next比较好，避免出错。一定要避免将p1,p2分别赋值为两个node.
 
