@@ -503,6 +503,8 @@ public class Solution {
     }
 }
 ```
+**有没有想过为什么初始化slow = fast = head呢，若slow = head, fast = head.next会发生什么。 
+* * *
 
 #### 143. Reorder List 
 
