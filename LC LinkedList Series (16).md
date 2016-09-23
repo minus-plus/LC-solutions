@@ -953,4 +953,4 @@ slow = head, fast = slow or slow.next is a good question to dsicuss. For detecti
 
 *** 
 MeMo：  
-09/23/2016	Done.   
+09/23/2016   1st recition DONE.   
