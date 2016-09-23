@@ -581,6 +581,7 @@ public class Solution {
 原理不多赘述。  
 记录一个prev变量，若current.val >= prev.val,直接跳过。  
 **代码**  
+```
 /**
  * Definition for singly-linked list.
  * public class ListNode {
@@ -620,6 +621,7 @@ public class Solution {
     }
 }
 ```
+* * *
 
 #### 148. Sort List 
 
@@ -708,6 +710,7 @@ public class Solution {
     }
 }
 ```
+* * * 
 #### 160. Intersection of Two Linked Lists 
 
 **Description**   
