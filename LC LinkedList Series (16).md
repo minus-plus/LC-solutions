@@ -727,8 +727,8 @@ B:     b1 → b2 → b3
 
 **Solution**  
 **思路**  
-方法1: HashMap，复杂度O(n)时间和O(n)空间。
-方法2： 类比找环。将其中一个head与tail相连。用找环开始位置的方法。也可以不连，逻辑上不太连贯。当快慢指针走到链表尾部，转换到另一个head重新开始走。
+方法1: HashMap，复杂度O(n)时间和O(n)空间。  
+方法2： 类比找环。将其中一个head与tail相连。用找环开始位置的方法。也可以不连，逻辑上不太连贯。当快慢指针走到链表尾部，转换到另一个head重新开始走。  
 **方法1 Hash**  
 ```java
 /**
@@ -844,6 +844,7 @@ public class Solution {
     }
 }
 ```
+* * * 
 #### 203. Remove Linked List Elements 
 
 **Description**   
@@ -921,7 +922,35 @@ public class Solution {
     }
 }
 ```
+**Recursive**    
+```java
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public ListNode reverseList(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode tail = head.next;
+        head.next = null;
+        ListNode newHead = reverseList(tail);
+        tail.next = head;
+        return newHead;
+    }
+}
+```
 * * *
 变量赋值之前，一定要注意哪些变量是变得。比如147题24行，将p2 = head。这里的head的位置是变化的，导致出错。而dummy总在队头，应为p2 = dummy.next;  
-因此若片p1和p2为相邻指针，p1 = someNode, p2 = p1.next比较好，避免出错。一定要避免将p1,p2分别赋值为两个node.
+因此若片p1和p2为相邻指针，p1 = someNode, p2 = p1.next比较好，避免出错。一定要避免将p1,p2分别赋值为两个node.  
+slow = head, fast = slow or slow.next is a good question to dsicuss. For detecting cycle, slow = fast = head is better. For other problem, it seems like fast = slow.next is better.   
 
+
+*** 
+MeMo：  
+09/23/2016	Done.   
