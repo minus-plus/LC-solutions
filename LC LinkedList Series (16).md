@@ -120,8 +120,7 @@ public class Solution {
 
 **Solution**  
 **思路**   
-dummy node + 快慢指针。交换first和second两个node，需要slow.next -> first，fast -> second。初始情况下slow指向dummy，确保head可以被交换。  
-注意second不能为null，因此fast != null && fast.next != null && fast.next.next != null。
+dummy node + 快慢指针。
 ```java
 /**
  * Definition for singly-linked list.
@@ -133,24 +132,16 @@ dummy node + 快慢指针。交换first和second两个node，需要slow.next -> 
  */
 public class Solution {
     public ListNode swapPairs(ListNode head) {
-        if (head == null || head.next == null) {
-            return head;
-        }
         ListNode dummy = new ListNode(-1);
         dummy.next = head;
-        ListNode slow = dummy;
-        ListNode fast = dummy;
-        int count = 0;
-        
-        while (fast != null && fast.next != null && fast.next.next != null) {
-            fast = fast.next.next;
-            ListNode temp = slow.next;
-            slow.next = fast;
-            temp.next = fast.next;
-            fast.next = temp;
-            fast = fast.next;
-            slow = fast;
-
+        ListNode left = dummy;
+        ListNode right = dummy.next;
+        while (right != null && right.next != null) {
+           left.next = right.next;
+           right.next = right.next.next;
+           left.next.next = right;
+           left = right;
+           right = right.next;
         }
         return dummy.next;
     }
