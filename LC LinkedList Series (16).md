@@ -15,7 +15,7 @@
 234 Palindrome Linked List  
 237 Delete Node in a Linked List  
 
----
+* * *
 #### 19. Remove Nth Node From End of List 
 
 **Description**   
@@ -68,6 +68,7 @@ public class Solution {
     }
 }
 ```
+* * *
 #### 21. Merge Two Sorted Lists 
 
 **Description**   
@@ -147,6 +148,7 @@ public class Solution {
     }
 }
 ```
+* * *
 #### 25. Reverse Nodes in k-Group 
 
 **Description**   
@@ -246,6 +248,7 @@ public class Solution25 {
     }
 }
 ```
+* * *
 #### 61. Rotate List 
 
 **Description**   
@@ -294,6 +297,7 @@ public class Solution {
     }
 }
 ```
+* * *
 #### 138. Copy List with Random Pointer 
 
 __Description__   
@@ -405,6 +409,7 @@ public class Solution {
     }
 }
 ```
+* * *
 #### 141. Linked List Cycle 
 
 **Description**   
@@ -447,7 +452,7 @@ public class Solution {
     }
 }
 ```
-
+* * *
 #### 142. Linked List Cycle II 
 
 __Description__   
@@ -503,7 +508,7 @@ public class Solution {
     }
 }
 ```
-**有没有想过为什么初始化slow = fast = head呢，若slow = head, fast = head.next会发生什么。 
+**有没有想过为什么初始化slow = fast = head呢，若slow = head, fast = head.next会发生什么。**
 * * *
 
 #### 143. Reorder List 
@@ -529,61 +534,43 @@ Given `{1,2,3,4}`, reorder it to `{1,4,2,3}`.
  * }
  */
 public class Solution {
-    public ListNode split(ListNode head) {
+    public ListNode reverse(ListNode head) {
+        ListNode tail = null;
+        while (head != null) {
+            ListNode temp = head.next;
+            head.next = tail;
+            tail = head;
+            head = temp;
+        }
+       return tail;
+    }
+    public void reorderList(ListNode head) {
+        if (head == null || head.next == null) {
+            return;
+        }
         ListNode slow = head;
         ListNode fast = head.next;
         while (fast != null && fast.next != null) {
             slow = slow.next;
             fast = fast.next.next;
-            // slow = 1,2,3,4
-            // fast = 1,3,5,7
         }
-        ListNode newHead = slow.next;
+        ListNode head2 = reverse(slow.next);
         slow.next = null;
-        return newHead;
-    }   
-    public ListNode reverse(ListNode head) {
-        ListNode tail = null;
-        while (head != null) {
-            ListNode next = head.next;
-            head.next = tail;
-            tail = head;
-            head = next;
-        }
-        return tail;
-    }
-    public void merge(ListNode head1, ListNode head2) {
-        ListNode dummy = new ListNode(-1);
+        ListNode dummy = new ListNode (-1);
         ListNode tail = dummy;
-        while(head1 != null && head2 != null){
-            tail.next = head1;
-            head1 = head1.next;
+        while (head != null && head2 != null) {
+            tail.next = head;
+            head = head.next;
             tail = tail.next;
-            tail.next = head2;
-            tail = tail.next;
+            tail.next= head2;
             head2 = head2.next;
+            tail = tail.next;
         }
-        if(head1 != null){
-            tail.next = head1;
-        }
-        if(head2!= null){
-            tail.next = head2;
-        }
-        dummy.next = null;
-    }
-    public void reorderList(ListNode head) {  
-        // write your code here
-        if(head == null || head.next == null || head.next.next == null){
-            return;
-        }
-        ListNode right = split(head);
-        System.out.println(right.val);
-        ListNode head2 = reverse(right);
-        merge(head, head2);
+        tail.next = head;
     }
 }
 ```
-
+* * *
 #### 147. Insertion Sort List  
 **Description**   
 >Sort a linked list using insertion sort.  
