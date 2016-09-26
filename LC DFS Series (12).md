@@ -655,7 +655,7 @@ public class Solution {
     }
 }
 ```
-** if we could modify the grid**  
+**if we could modify the grid**  
 ```java
 public class Solution {
     public int numIslands(char[][] grid) {
