@@ -52,7 +52,7 @@
 ```
 return `[1,3,2]`.
 
-**[题目链接](https://leetcode.com/problems/binary-tree-inorder-traversal/)**
+**[题目链接](https://leetcode.com/problems/binary-tree-inorder-traversal/)**   
 **Solution**  
 **思路**  
 非递归。顺序：  
@@ -149,8 +149,8 @@ public class Solution {
    2     1         2                 3
 ```
 
-**[题目链接](https://leetcode.com/problems/unique-binary-search-trees/)**  
-**Solution**  
+**[题目链接](https://leetcode.com/problems/unique-binary-search-trees/)**    
+**Solution**   
 **思路**  
 dp。  
 二叉树的问题一般可用divide and conquer的思想来解决。以root为跟的二叉树的个数是以left child为跟的二叉树的个数 * 以right child为跟的二叉树的个数。翻译过来就是 。。。。  
