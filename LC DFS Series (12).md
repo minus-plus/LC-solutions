@@ -870,60 +870,67 @@ public class Solution {
 "3456237490", 9191 -> []
 ```
 
+**[题目链接](https://leetcode.com/problems/expression-add-operators/)**  
 
 **Solution**  
-**思路**  
+**思路**    
+subsets类问题。用dfs将num划分，在两个数之前填入运算符。
+一、划分。
+有多少种划分呢？ 2 ^ (n - 1)  - 1
+```
+1 2 3 4
+2 ^ 3 - 1
+```
+二、运算
 借鉴eval用stack计算值。  
-对于一个comming number num，看栈顶是：  
-1 .`null`，直接入栈  
-2 .`"*"`, `stack.pop()*num`入栈  
-3 .`"+"`, 将栈内所有元素pop求和，然后`num`入栈  
-4 .`"-"`,将栈内所有元素pop求和，然后`-num`入栈    
+对于一个comming number num，看栈顶是：
+1. `null`，直接入栈
+2. `"*"`, `stack.pop()*num`入栈
+3. `"+"`, 将栈内所有元素pop求和，然后`num`入栈
+4. `"-"`,将栈内所有元素pop求和，然后`-num`入栈  
 
 **其实stack的size最大是2.**在加入commingnumber之前，先将已遍历部分计算然后入栈。
-可用pre表示已经计算的值，val表示未被计算的值，参照eval从左到右扫描即可。  
+可用sum表示已经计算的值，prev表示上一个数(还没有加入到sum中去)，参照eval从左到右扫描即可。  
 ```java
 public class Solution {
-    public void dfs(String num, long target, List<String> result, String path, int current, long pre, long val) {
-        // leaf noder
-        // largest current should be num.length() - 2
-        if (current >= num.length()) {
-            // goal node
-            if (pre + val == target) {
+    public List<String> addOperators(String num, int target) {
+        List<String> result = new ArrayList();
+        if (num == null || num.length() == 0) {
+            return result;
+        }
+        String path = new String("");
+        dfs(num, target, 0, 0, 0, result, path);
+        return result;
+    }
+    public void dfs(String num, int target, int pos, long sum, long prev, List<String> result, String path) {
+        // leaf node, end of the string
+        if (pos == num.length()) {
+            if (prev + sum == target) {
                 result.add(path);
             }
             return;
         }
-       
-        for (int i = current; i < num.length(); i++) {
- 
-            long x = Long.parseLong(num.substring(current, i + 1));
-            if (current != 0) {
-                // for + and -,sum(pop all) push sum back, push x * sign back
-                dfs(num, target, result, path + "+" + num.substring(current, i + 1), i + 1, pre + val, x);
-                dfs(num, target, result, path + "-" + num.substring(current, i + 1), i + 1, pre + val, -x);
-                // for *, push stack.pop() * num back
-                dfs(num, target, result, path + "*" + num.substring(current, i + 1), i + 1, pre, val * x);
+        // see what operater btwn prev number and current number
+        for (int i = pos; i < num.length(); i++) {
+            String s = num.substring(pos, i + 1);
+            long x = Long.parseLong(s);
+            if (pos == 0) {
+                dfs(num, target, i + 1, 0, x, result, path + s);
             } else {
-                // stack.empty(), push comming number into stack
-                dfs(num, target, result, path + num.substring(current, i + 1), i + 1, 0, x);
+                // +
+                dfs(num, target, i + 1, sum + prev, x, result, path + "+" + s);
+                // -
+                dfs(num, target, i + 1, sum + prev, -x, result, path + "-" + s);
+                // *
+                dfs(num, target, i + 1, sum, prev * x, result, path + "*" + s);
             }
-            if (num.charAt(current) == '0') {
-                break; // only calculate the first 0
+            // this expression used to prevent to calculate 00....
+            //  if the first char is '0', end loop
+            if (num.charAt(pos) == '0') {
+                break;
             }
         }
-    }
-    public List<String> addOperators(String num, int target) {
-        List<String> result = new ArrayList<String>();
-        if (num == null || num.length() == 0) {
-            return result;
-        }
-        String path = new String();
-        int current = 0; // current position for operator
-        long pre = 0; // 已经计算完部分的计算值
-        long val = 0; //已经遍历但还没有加入计算值的部分，因为*优先级较高，要先计算玩*再加入计算值
-        dfs(num, (long)target, result, path, current, pre, val);
-        return result;
     }
 }
 ```
+* * * 
