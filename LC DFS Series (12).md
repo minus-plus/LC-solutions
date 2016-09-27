@@ -874,23 +874,23 @@ public class Solution {
 
 **Solution**  
 **思路**    
-subsets类问题。用dfs将num划分，在两个数之前填入运算符。
-一、划分。
-有多少种划分呢？ 2 ^ (n - 1)  - 1
+subsets类问题。用dfs将num划分，在两个数之前填入运算符。  
+一、划分。  
+有多少种划分呢？ 2 ^ (n - 1)  - 1  
 ```
 1 2 3 4
 2 ^ 3 - 1
 ```
-二、运算
-借鉴eval用stack计算值。  
-对于一个comming number num，看栈顶是：
-1. `null`，直接入栈
-2. `"*"`, `stack.pop()*num`入栈
-3. `"+"`, 将栈内所有元素pop求和，然后`num`入栈
-4. `"-"`,将栈内所有元素pop求和，然后`-num`入栈  
+二、运算  
+借鉴eval用stack计算值。     
+对于一个comming number num，看栈顶是：  
+1. `null`，直接入栈  
+2. `"*"`, `stack.pop()*num`入栈  
+3. `"+"`, 将栈内所有元素pop求和，然后`num`入栈  
+4. `"-"`,将栈内所有元素pop求和，然后`-num`入栈    
 
-**其实stack的size最大是2.**在加入commingnumber之前，先将已遍历部分计算然后入栈。
-可用sum表示已经计算的值，prev表示上一个数(还没有加入到sum中去)，参照eval从左到右扫描即可。  
+**其实stack的size最大是2.**在加入commingnumber之前，先将已遍历部分计算然后入栈。  
+可用sum表示已经计算的值，prev表示上一个数(还没有加入到sum中去)，参照eval从左到右扫描即可。    
 ```java
 public class Solution {
     public List<String> addOperators(String num, int target) {
