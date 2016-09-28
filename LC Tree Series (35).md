@@ -1126,15 +1126,16 @@ public class Solution {
 __Description__   
 >Given a singly linked list where elements are sorted in ascending order, convert it to a height balanced BST.
 
+**[题目链接](https://leetcode.com/problems/convert-sorted-list-to-binary-search-tree)**
 __Solution__   
 **思路**  
 依旧是二分。
 divide and conquer.  
-1. find middle of the list, as root. split to left and right.
-2. root.left = left, root.right = right;
-3. return root;
+1. find middle of the list, as root. split to left and right.  
+2. root.left = left, root.right = right;  
+3. return root;  
 
-思路1：将LinkedList转换为ArrayList，然后Divide and Conquer. 
+思路1：将LinkedList转换为ArrayList，然后Divide and Conquer.   
 ```java
 /**
  * Definition for singly-linked list.
@@ -1258,36 +1259,38 @@ right分支从mid.next开始
  * }
  */
 public class Solution {
-    public TreeNode divideConquer(ListNode head, int start, int end) {
-        if (start > end) {
-            return null;
-        }
-        int mid = start + (end - start) / 2;
-        int index = 0;
-        ListNode current = head;
-        while (index < mid) {
-            index++;
-            current = current.next;
-        }
-        TreeNode root = new TreeNode(current.val);
-        TreeNode left = divideConquer(head, start, mid - 1);
-        TreeNode right = divideConquer(head, mid + 1, end);
-        root.left = left;
-        root.right = right;
-        return root;
-    }
-    
     public TreeNode sortedListToBST(ListNode head) {
         if (head == null) {
             return null;
         }
-        int length = 0;
+        int length = getLength(head);
+        return divideConquer(head, length - 1);
+    }
+    public TreeNode divideConquer(ListNode head, int end) {
+        if (end < 0) {
+            return null;
+        }
+        int mid = end / 2;
+        int index = 0;
         ListNode current = head;
-        while (current != null) {
-            length++;
+        while (index < end / 2) {
+            index++;
             current = current.next;
         }
-        return divideConquer(head, 0, length - 1);
+        TreeNode root = new TreeNode(current.val);
+        TreeNode left = divideConquer(head, mid - 1);
+        TreeNode right = divideConquer(current.next, end - mid - 1);
+        root.left = left;
+        root.right = right;
+        return root;
+    }
+    public int getLength(ListNode head) {
+        int length = 0;
+        while (head != null) {
+            length++;
+            head = head.next;
+        }
+        return length;
     }
 }
 ```
