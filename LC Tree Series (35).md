@@ -163,19 +163,17 @@ dp。
 ```java
 public class Solution {
     public int numTrees(int n) {
-        if (n <= 1) {
-            return 1;
+        if (n <= 0) {
+            return 0;
         }
-        int [] num = new int[n + 1];
-        num[0] = 1;
-        num[1] = 1;
-        for (int i = 2; i <= n; i++) {
-            num[i] = 0;
+        int[] dp = new int[n + 1];
+        dp[0] = 1;
+        for (int i = 1; i <= n; i++) {
             for (int j = 0; j <= i - 1; j++) {
-                num[i] += (num[j] * num[i - 1 - j]);
+                dp[i] += dp[j] * dp[i - 1 - j];
             }
         }
-        return num[n];   
+        return dp[n];
     }
 }
 ```
@@ -450,7 +448,7 @@ public class Solution {
 ```  
 first element shuold be the `first prev` that prev.val >= node.val.  
 second element should be the `last node` that prev.val >= node.val.   
-用中序遍历可找到这两个node。
+用中序遍历可找到这两个node。   
 **代码**   
 ```java
 /**
@@ -809,6 +807,44 @@ public class Solution {
             return 0;
         }
         return Math.max(maxDepth(root.left) , maxDepth(root.right)) + 1;
+    }
+}
+```
+**DFS**  
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public int maxDepth(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int max = 0;
+        Stack<TreeNode> stack = new Stack();
+        Stack<Integer> depthStack = new Stack();
+        stack.push(root);
+        depthStack.push(1);
+        while (!stack.empty()) {
+            TreeNode node = stack.pop();
+            int depth = depthStack.pop();
+            max = Math.max(max, depth);
+            if (node.right != null) {
+                stack.push(node.right);
+                depthStack.push(depth + 1);
+            }
+            if (node.left != null) {
+                stack.push(node.left);
+                depthStack.push(depth + 1);
+            }
+        }
+        return max;
     }
 }
 ```
