@@ -937,10 +937,8 @@ public class Solution {
         return root;
     }
     public TreeNode buildTree(int[] preOrder, int[] inOrder) {
-        if (preOrder == null || inOrder == null) {
-            return null;
-        }
-        if (preOrder.length != inOrder.length) {
+        if (preorder == null || inorder == null || preorder.length == 0 || 
+            inorder.length == 0 || preorder.length != inorder.length) {
             return null;
         }
         return buildTreeHelper(preOrder, inOrder, 0, preOrder.length - 1, 0, inOrder.length - 1);
