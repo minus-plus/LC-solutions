@@ -1620,13 +1620,14 @@ public class Solution {
         if (root == null) {
             return;
         }
-        TreeNode dummy = new TreeNode(-1);
-        TreeNode prev = dummy;
+        TreeNode prev = null;
         Stack<TreeNode> stack = new Stack();
         stack.push(root);
         while (!stack.empty()) {
             TreeNode node = stack.pop();
-            prev.right = node;
+            if (prev != null) {
+                prev.right = node;
+            }
             prev = node;
             if (node.right != null) {
                 stack.push(node.right);
