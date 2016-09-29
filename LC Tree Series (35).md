@@ -1126,7 +1126,8 @@ public class Solution {
 __Description__   
 >Given a singly linked list where elements are sorted in ascending order, convert it to a height balanced BST.
 
-**[题目链接](https://leetcode.com/problems/convert-sorted-list-to-binary-search-tree)**
+**[题目链接](https://leetcode.com/problems/convert-sorted-list-to-binary-search-tree)**  
+
 __Solution__   
 **思路**  
 依旧是二分。
@@ -1538,33 +1539,31 @@ if sum == 0会发生什么？如何判断root == null的情况？
  * }
  */
 public class Solution {
-    public void dfs(List<List<Integer>> result, List<Integer> path, TreeNode root, int sum) {
-        if (root == null) {
-            return;
-        }
-        if (root.left == null && root.right == null && sum == root.val) {
-            List<Integer> list = new ArrayList<Integer>(path);
-            list.add(root.val);
-            result.add(list);
-            return;
-        }
-        path.add(root.val);
-        if (root.left != null) {
-            dfs(result, path, root.left, sum - root.val);
-        }
-        if (root.right != null) {
-            dfs(result, path, root.right, sum - root.val);
-        }
-        path.remove(path.size() - 1);
-    }
     public List<List<Integer>> pathSum(TreeNode root, int sum) {
         List<List<Integer>> result = new ArrayList();
         if (root == null) {
             return result;
         }
         List<Integer> path = new ArrayList();
-        dfs(result, path, root, sum);
+        dfs(root, sum, 0, result, path);
         return result;
+    }
+    public void dfs(TreeNode root, int sum, int current, List<List<Integer>> result, List<Integer> path) {
+        path.add(root.val);
+        if (root.left == null && root.right == null) {
+            if (current + root.val == sum) {
+                result.add(new ArrayList(path));
+            }
+            path.remove(path.size() - 1);
+            return;
+        }
+        if (root.left != null) {
+            dfs(root.left, sum, current + root.val, result, path);
+        }
+        if (root.right != null) {
+            dfs(root.right, sum, current + root.val, result, path);
+        }
+        path.remove(path.size() - 1);
     }
 }
 ```
