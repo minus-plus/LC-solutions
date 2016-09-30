@@ -1991,7 +1991,7 @@ public class Solution {
     }
 }
 ```
-**divide and conquer  **
+**divide and conquer**
 ```java
 /**
  * Definition for a binary tree node.
@@ -2132,12 +2132,61 @@ public class Solution {
 
 **Solution**   
 **思路**  
-Recursive and Iterative.  
-非递归的两种思路：
+修改：  
+Binary Tree的preorder and postorder tranversal应该是类似的，之前的思路逻辑性太差了。   
+套用preorder的模板，但在将current.val加入result之前，先检验是否已经访问children。  
 
-
+prev可能的三种情况。
+* right child, if current.right != null
+* left child, if current.right == null && current.left != null
+* ancestor.left, ancecstor is the nearest ancestor whoes left child != null  
+左右子树没有访问，要先访问children入栈。均被访问，pop()
 
 **代码**   
+**Iterative**
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> result = new ArrayList();
+        if (root == null) {
+            return result;
+        }
+        
+        Stack<TreeNode> stack = new Stack();
+        stack.push(root);
+        TreeNode prev = new TreeNode(-1);
+        while (!stack.empty()) {
+            TreeNode current = stack.peek();
+            // if all children are visited
+            if (current.left == null && current.right == null ||
+                prev == current.right || prev == current.left) {
+                // current has no children or back from children
+                stack.pop();
+                result.add(current.val);
+                prev = current;
+            } else {
+                // children are not visited
+                if (current.right != null) {
+                    stack.push(current.right);
+                }
+                if (current.left != null) {
+                    stack.push(current.left);
+                }
+            }
+        }
+        return result;
+    }
+}
+```
 **Iterative**
 **思路1. 后续遍历每个节点被访问两次，第一次left and right没有被访问，第二次是left和right都已经被访问。而且要再第二次重新返回到节点时将节点加入到结果中。**
 ```java
