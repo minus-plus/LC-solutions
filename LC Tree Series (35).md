@@ -2433,7 +2433,7 @@ public class BSTIterator {
 **Solution**   
 **思路**  
 思路1： level order traversal。将level的最后一个元素加入到result list。比较简单。  
-思路2： dfs，前序遍历，需要two stacs, first stack stores treeNodes, second stack stores depth of nodes, 入栈时，先左后右。
+思路2： dfs，前序遍历，需要two stacks, first stack stores treeNodes, second stack stores depth of nodes, 入栈时，先左后右。
 
 **代码**
 **BFS**  
@@ -2640,6 +2640,25 @@ public class Solution {
  * }
  */
 public class Solution {
+    public int countNodes(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int h = getHeight(root);
+        int sum = 0;
+        while (root != null) {
+            int hr = getHeight(root.right);
+            if (hr == h - 1) {
+                sum += (1 << hr);
+                root = root.right;
+            } else {
+                sum += (1 << hr);
+                root = root.left;
+            }
+            h--;
+        }
+        return sum;
+    }
     public int getHeight(TreeNode root) {
         int height = 0;
         while (root != null) {
@@ -2647,27 +2666,6 @@ public class Solution {
             root = root.left;
         }
         return height;
-    }
-   
-    public int countNodes(TreeNode root) {
-       if (root == null) {
-           return 0;
-       }
-       int sum = 0;
-       int hl = 0;
-       int hr = 0;
-       while (root != null) {
-           hl = getHeight(root.left);
-           hr = getHeight(root.right);
-           if (hl == hr) {
-               sum += (1 << hr);
-               root = root.right;
-           } else {
-               sum += (1 << hr);
-               root = root.left;
-           }
-       }
-       return sum;
     }
 }
 ```
