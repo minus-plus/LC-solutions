@@ -3150,15 +3150,24 @@ public class Codec {
 
     // Encodes a tree to a single string.
     public String serialize(TreeNode root) {
+        if (root == null) {
+            return "null";
+        }
         StringBuilder sb = new StringBuilder();
         Queue<TreeNode> queue = new LinkedList<TreeNode>();
         queue.offer(root);
+        sb.append(root.val + ",");
         while (!queue.isEmpty()) {
             TreeNode current = queue.poll();
-            if (current != null) {
-                sb.append(current.val + ",");
+            if (current.left != null) {
                 queue.offer(current.left);
+                sb.append(current.left.val + ",");
+            } else {
+                sb.append("null,");
+            }
+            if (current.right != null) {
                 queue.offer(current.right);
+                sb.append(current.right.val + ",");
             } else {
                 sb.append("null,");
             }
@@ -3169,23 +3178,19 @@ public class Codec {
     // Decodes your encoded data to tree.
     public TreeNode deserialize(String data) {
         String[] array = data.split(",");
-        TreeNode root = null;
         if (array[0].equals("null")) {
-            return root;
-        } else {
-            root = new TreeNode(Integer.parseInt(array[0]));
+            return null;
         }
-        Queue<TreeNode> queue = new LinkedList<TreeNode>();
+        Queue<TreeNode> queue = new LinkedList();
+        TreeNode root = new TreeNode(Integer.parseInt(array[0]));
         queue.offer(root);
         for (int i = 1; i < array.length; i++) {
             TreeNode current = queue.peek();
-            TreeNode child = null;
             if (!array[i].equals("null")) {
-                
-                child = new TreeNode(Integer.parseInt(array[i]));
+                TreeNode child = new TreeNode(Integer.parseInt(array[i]));
                 queue.offer(child);
                 if (i % 2 == 1) {
-                    current.left = child; 
+                    current.left = child;
                 } else {
                     current.right = child;
                 }
