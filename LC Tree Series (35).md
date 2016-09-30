@@ -2019,6 +2019,41 @@ public class Solution {
 }
 ```
 * * *
+loop inveriant   
+preorder traversal, 到达current node后, 访问之, 然后先访问left child再访问right child, so 
+```
+TreeNode current = stack.pop();
+result.add(current.val);
+if (current.right != null) {
+    stack.push(current.right);
+}
+if (current.left != null) {
+    stack.push(current.left);
+}
+```
+postorder traversal,到达current node后，先判定children是否已经被访问, 若被访问, 访问current node, 然后go up, else 要先访问children  
+```
+TreeNode current = stack.peek();
+if (current.left == null && current.right == null ||  
+    prev == current.right || prev == current.right) {
+    stack.pop();
+    result.add(current.val);
+    prev = current;
+} else {
+    // same as preorder traversal
+}
+```
+inorder traversal, 到达current node节点后, 要访问right child再访问right
+```
+while (current != null) {
+    stack.push(current);
+    current = current.left;
+}
+current = stack.pop();
+result.add(current.val);
+current = current.right;
+```
+* * *
 
 #### 144. Binary Tree Preorder Traversal 
 
