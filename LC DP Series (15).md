@@ -27,10 +27,11 @@ answer
 #### 53. Maximum Subarray 
 
 __Description__   
-Find the contiguous subarray within an array (containing at least one number) which has the largest sum.
+>Find the contiguous subarray within an array (containing at least one number) which has the largest sum.
 
-For example, given the array [−2,1,−3,4,−1,2,1,−5,4],
-the contiguous subarray [4,−1,2,1] has the largest sum = 6.
+>For example, given the array [−2,1,−3,4,−1,2,1,−5,4],
+the contiguous subarray [4,−1,2,1] has the largest sum = 6.  
+
 __Solution__   
 **概念**   
 最小前缀和minSum，当前位置i的最大区间和 = sum - minSum。
@@ -103,7 +104,7 @@ __Description__
 Given an array of integers, find two non-overlapping subarrays which have the largest sum.
 The number in each subarray should be contiguous.
 Return the largest sum.
-__Solution__  
+__Solution__   
 分别从left和right两个方向求Maximum subArray, 对当前i, 左侧的maxSubArray + 右侧的maxSubArray
 ```java
 public class Solution {
@@ -389,33 +390,61 @@ dp[i][j]: 以i结尾的word1到以j结尾的word2的编辑距离。i, j从1算�
 ```java
 public class Solution {
     public int minDistance(String word1, String word2) {
-        if (word1.length() == 0) {
-            return word2.length();
-        }
-        if (word2.length() == 0) {
-            return word1.length();
+        if (word1 == null || word2 == null) {
+            return -1;
         }
         int m = word1.length();
         int n = word2.length();
-        
+        if (m == 0) {
+            return n;
+        }
+        if (n == 0) {
+            return m;
+        }
         int[][] dp = new int[m + 1][n + 1];
-        for (int i = 0; i <= m; i++) {
+        for (int i = 1; i <= m; i++) {
             dp[i][0] = i;
         }
-        for (int j = 0; j <= n; j++) {
-            dp[0][j] = j;
+        for (int i = 1; i <= n; i++) {
+            dp[0][i] = i;
         }
         for (int i = 1; i <= m; i++) {
             for (int j = 1; j <= n; j++) {
-                dp[i][j] = Math.min(dp[i][j - 1], dp[i - 1][j]) + 1;
                 if (word1.charAt(i - 1) == word2.charAt(j - 1)) {
-                    dp[i][j] = Math.min(dp[i][j], dp[i - 1][j - 1]);
+                    dp[i][j] = dp[i - 1][j - 1];
                 } else {
-                    dp[i][j] = Math.min(dp[i][j], dp[i - 1][j - 1] + 1);
+                    dp[i][j] = 1 + Math.min(dp[i - 1][j], Math.min(dp[i][j - 1], dp[i - 1][j - 1]));
                 }
             }
         }
         return dp[m][n];
+    }
+}
+```
+**DFS-TLE**   
+```java
+public class Solution {
+    public int minDistance(String word1, String word2) {
+        return dist(word1, word2, word1.length(), word2.length());
+    }
+    public int min(int x, int y, int z) {
+        return Math.min(x, Math.min(y, z));
+    }
+    
+    public int dist(String word1, String word2, int m, int n)  {
+        if (m == 0) {
+            return n;
+        }
+        if (n == 0) {
+            return m;
+        }
+        if (word1.charAt(m - 1) == word2.charAt(n - 1)) {
+            return dist(word1, word2, m - 1, n - 1);
+        } else {
+            return 1 + min(dist(word1, word2, m - 1, n), // delete
+                           dist(word1, word2, m - 1, n - 1), // replace
+                           dist(word1, word2, m, n - 1)); // insert
+        }
     }
 }
 ```
