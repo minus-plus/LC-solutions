@@ -191,6 +191,38 @@ public class Solution {
     }
 }
 ```
+**记忆化搜索** 
+```java
+public class Solution {
+    public int uniquePaths(int m, int n) {
+        if (m <= 0 || n <= 0) {
+            return 0;
+        }
+        int[][] memo = new int[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                memo[i][j] = -1;
+            }
+        }
+        return dfs(m, n, 0, 0, memo);
+    }
+    public int dfs(int m, int n, int i, int j, int[][] memo) {
+        if (i >= m || j >= n) {
+            return 0;
+        }
+        if (i == m - 1 && j == n - 1) {
+            return 1;
+        }
+        if (memo[i][j] > -1) {
+            return memo[i][j];
+        }
+        int child1 = dfs(m, n, i + 1, j, memo);
+        int child2 = dfs(m, n, i, j + 1, memo);
+        memo[i][j] = child1 + child2;
+        return memo[i][j];
+    }
+}
+```
 ---
 ####   63. Unique Paths II   
 **Description**   
