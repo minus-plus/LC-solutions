@@ -301,6 +301,38 @@ public class Solution {
     }
 }
 ```
+**记忆化搜索**  
+```java
+public class Solution {
+    public int uniquePathsWithObstacles(int[][] grid) {
+        if (grid == null || grid.length == 0 || grid[0] == null || grid[0].length == 0) {
+            return 0;
+        }
+        int[][] memo = new int[grid.length][grid[0].length];
+        for (int i = 0; i < memo.length; i++) {
+            for (int j = 0; j < memo[0].length; j++) {
+                memo[i][j] = -1;
+            }
+        }
+        return dfs(grid, 0, 0, memo);
+    }
+    public int dfs(int[][] grid, int i, int j, int[][] memo) {
+        if (i >= grid.length || j >= grid[0].length || grid[i][j] == 1) {
+            return 0;
+        }
+        if (i == grid.length - 1 && j == grid[0].length - 1) {
+            return 1;
+        }
+        if (memo[i][j] > -1) {
+            return memo[i][j];
+        }
+        int s1 = dfs(grid, i + 1, j, memo);
+        int s2 = dfs(grid, i, j + 1, memo);
+        memo[i][j] = s1 + s2;
+        return memo[i][j];
+    }
+}
+```
 ***
 #### 64. Minimum Path Sum 
 
