@@ -512,6 +512,44 @@ public class Solution {
     }
 }
 ```
+
+**DFS-Memorization, from TLE to beat 97%**  
+```java
+public class Solution {
+    public int minDistance(String word1, String word2) {
+        int[][] memo = new int[word1.length()][word2.length()];
+        for (int[] arr : memo) {
+            Arrays.fill(arr, -1);
+        }
+        return dist(word1, word2, word1.length(), word2.length(), memo);
+    }
+    public int min(int x, int y, int z) {
+        return Math.min(x, Math.min(y, z));
+    }
+    
+    public int dist(String word1, String word2, int m, int n, int[][] memo)  {
+        if (m == 0) {
+            return n;
+        }
+        if (n == 0) {
+            return m;
+        }
+        if (memo[m - 1][n - 1] > -1) {
+            return memo[m - 1][n - 1];
+        }
+        int num = 0;
+        if (word1.charAt(m - 1) == word2.charAt(n - 1)) {
+            num = dist(word1, word2, m - 1, n - 1, memo);
+        } else {
+            num =  1 + min(dist(word1, word2, m - 1, n, memo), // delete
+                           dist(word1, word2, m - 1, n - 1, memo), // replace
+                           dist(word1, word2, m, n - 1, memo)); // insert
+        }
+        memo[m - 1][n - 1] = num;
+        return memo[m - 1][n - 1];
+    }
+}
+```
 * * *
 #### 97. Interleaving String 
 
