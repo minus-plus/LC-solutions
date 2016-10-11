@@ -606,6 +606,45 @@ public class Solution {
     }
 }
 ```
+**DFS-Memorization**  
+```java
+public class Solution {
+    public boolean isInterleave(String s1, String s2, String s3) {
+        if (s1.length() + s2.length() != s3.length()) {
+            return false;
+        }
+        if (s1.length() == 0) {
+            return s3.equals(s2);
+        }
+        if (s2.length() == 0) {
+            return s3.equals(s1);
+        }
+        int m = s1.length();
+        int n = s2.length();
+        int[][] memo = new int[m + 1][n + 1];
+        for (int[] arr : memo) {
+            Arrays.fill(arr, -1);
+        }
+        return dfs(s1, s2, s3, 0, 0, memo);
+        
+    }
+    public boolean dfs(String s1, String s2, String s3, int i, int j, int[][] memo) {
+        if (i == s1.length() && j == s2.length()) {
+            return true;
+        }
+        if (memo[i][j] == 0) {
+            return false;
+        } else if (memo[i][j] == 1) {
+            return true;
+        }
+        //System.out.println(i + " " + j);
+        boolean result = i < s1.length() && s1.charAt(i) == s3.charAt(i + j) && dfs(s1, s2, s3, i + 1, j, memo) ||
+               j < s2.length() && s2.charAt(j) == s3.charAt(i + j) && dfs(s1, s2, s3, i, j + 1, memo);
+        memo[i][j] = result ? 1 : 0;
+        return result;
+    }
+}
+```
 * * *  
 #### 115. Distinct Subsequences 
 
