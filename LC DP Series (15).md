@@ -694,6 +694,42 @@ public class Solution {
     }
 }
 ```
+**DFS-Memorization, stack overflow, stack depth too high**
+```java
+public class Solution {
+    public int numDistinct(String s, String t) {
+        if (s.length() < t.length()) {
+            return 0;
+        }
+        int m = s.length();
+        int n = t.length();
+        int[][] memo = new int[m][n];
+        for (int[] arr : memo) {
+            Arrays.fill(arr, -1);
+        }
+        return dfs(s, t, 0, 0, memo);
+    }
+    public int dfs(String s, String t, int i, int j, int[][] memo) {
+        if (j == t.length()) {
+            return 1;
+        }
+        if (i == s.length() || s.length() - i < t.length() - j) {
+            return 0;
+        }
+        if (memo[i][j] > -1) {
+            return memo[i][j];
+        }
+        int result = 0;
+        if (s.charAt(i) == t.charAt(j)) {
+            result = dfs(s, t, i + 1, j + 1, memo) + dfs(s, t, i + 1, j, memo);
+        } else {
+            result = dfs(s, t, i + 1, j, memo);
+        }
+        memo[i][j] = result;
+        return result;
+    }
+}
+```
 * * *
 #### 139. Word Break 
 
