@@ -772,6 +772,28 @@ public class Solution {
     }
 }
 ```
+**这样写可以降低时间，好神奇**  
+```java
+public class Solution {
+    public boolean wordBreak(String s, Set<String> wordDict) {
+        if (s == null || s.length() == 0 || wordDict == null) {
+            return false;
+        }
+        int m = s.length();
+        boolean[] dp = new boolean[m + 1];
+        dp[0] = true;
+        for (int i = 1; i <= m; i++) {
+            for (int j = i - 1; j >= 0; j--) {
+                if (dp[j] && wordDict.contains(s.substring(j, i))){
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        return dp[m];
+    }
+}
+```
 
 * * *
 
@@ -790,9 +812,9 @@ public class Solution {
 
 **Solution**  
 **思路**  
-DFS。  首先，这是一道典型的dfs题。  
-优化，遍历到i，如果i + 1 ~ length部分没有解的话，则停止对本分支的搜索。 可用动归标记以i开头到end的子串s.substring(i, length)是否有解，便于剪枝。  
-**模块化操作，便于理清逻辑和debug**  
+DFS。  首先，这是一道典型的dfs题。   
+优化，遍历到i，如果i + 1 ~ length部分没有解的话，则停止对本分支的搜索。 可用动归标记以i开头到end的子串s.substring(i, length)是否有解，便于剪枝。    
+**模块化操作，便于理清逻辑和debug**    
 ```java
 public class Solution {
     public boolean[] hasSolution(String s, Set<String> wordDict) {
