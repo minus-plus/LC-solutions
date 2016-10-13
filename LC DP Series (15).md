@@ -879,16 +879,16 @@ public class Solution {
 **思路** 
 Maximum  
 Sequence 
-考虑动归。但这题比较tricky，因为nums[i]可能是负数，如果只max[i]表示以位置i结尾的数组的最大积，max[i]可能不是dp[i - 1] * nums[i]和nums[i]中的任何一个。这里要引入另外一个变量min[i]表示以i结尾的数组的最小积 .
+考虑动归。但这题比较tricky，因为nums[i]可能是负数，如果只max[i]表示以位置i结尾的数组的最大积，max[i]可能不是dp[i - 1] * nums[i]和nums[i]中的任何一个。这里要引入另外一个变量min[i]表示以i结尾的数组的最小积.  
 
 i与i - 1的关系: 
-nums[i]可能为正也可能为负。
-max[i - 1]可能为+也可能为-。
-min[i - 1]可能为+也可能为-。
-因此max[i]和min[i]与num[i], max[i - 1], min[i - 1]三者都有关系。  
-max[i] = max(nums[i], nums[i] * max[i - 1], nums[i] * min[i - 1]);  
-min[i] = min(nums[i], nums[i] * max[i - 1], nums[i] * min[i - 1]);  
-result = max(result, max[i]);  
+nums[i]可能为正也可能为负。   
+max[i - 1]可能为+也可能为-。   
+min[i - 1]可能为+也可能为-。   
+因此max[i]和min[i]与num[i], max[i - 1], min[i - 1]三者都有关系。     
+max[i] = max(nums[i], nums[i] * max[i - 1], nums[i] * min[i - 1]);     
+min[i] = min(nums[i], nums[i] * max[i - 1], nums[i] * min[i - 1]);     
+result = max(result, max[i]);     
 
 **代码** 
 
@@ -950,6 +950,7 @@ dp[i][j] = Math.max(1,  Math.min(dp[i][j + 1], dp[i + 1][j] - dungeon[i][j]))
 从左上角开始行不行呢？  
 首先我们不知道在位置i,j的上一个位置是那个，我们不确定会选i - 1, j还是i, j - 1。
 其次，不容易推倒i, j和i - 1, j及i, j - 1的关系。  
+**最主要的是，所求的目标最少需要多少点血，在位置（i,j）取决于(i - 1, j) and (i, j + 1)的需求值，而不是(i - 1, j) and (i, j - 1)。**    
 
 对比A start path finder。在搜索路径时，先用的heuristic距离，要用bfs搜索最优路径，待查找到最优路径之后回溯。  本题要从左上角的出发点开始，也要用bfs搜索到目标之后用回溯才可以。  
 
@@ -1019,6 +1020,34 @@ public class Solution {
             dp[0] = temp;
         }
         return dp[1];
+    }
+}
+```
+```java
+public class Solution {
+    public int rob(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }   
+        if (nums.length == 1) {
+            return nums[0];
+        }
+        int[] memo = new int[nums.length];
+        Arrays.fill(memo, -1);
+        return dfs(nums, nums.length - 1, memo);
+    }
+    public int dfs(int[] nums, int pos, int[] memo) {
+        if (pos == 0) {
+            return nums[0];
+        }
+        if (pos == 1) {
+            return Math.max(nums[0], nums[1]);
+        }
+        if (memo[pos] > -1) {
+            return memo[pos];
+        }
+        memo[pos] = Math.max(dfs(nums, pos - 1, memo), dfs(nums, pos - 2, memo) + nums[pos]);
+        return memo[pos];
     }
 }
 ```
