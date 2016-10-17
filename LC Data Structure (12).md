@@ -797,19 +797,16 @@ public class Solution {
         }
         int[] result = new int[nums.length - k + 1];
         Deque<Integer> dq = new ArrayDeque<Integer>();
+        // descendingly sor the deque, let the elements in deque have descending order
         for (int i = 0; i < nums.length; i++) {
-            if (dq.isEmpty() || nums[i] <= nums[dq.peekLast()]) {
-                dq.offer(i);
-            } else {
-                while (!dq.isEmpty() && nums[i] > nums[dq.peekLast()]) {
-                    dq.pollLast();
-                }
-                dq.offer(i);
+            while (!dq.isEmpty() && nums[i] > nums[dq.peekLast()]) {
+               dq.pollLast();
             }
+            dq.offer(i);
             if (i >= k - 1) {
                 result[i - k + 1] = nums[dq.peek()];
-                if (dq.peek() == i - k + 1){
-                    dq.pollFirst();
+                if (dq.peek() == i - k + 1) {
+                    dq.poll();
                 }
             }
         }

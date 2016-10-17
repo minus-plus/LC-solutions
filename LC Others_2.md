@@ -106,3 +106,136 @@ public class Solution {
 }
 ```
 * * *
+
+#### 200. Number of Islands
+
+__Description__   
+>Given a 2d grid map of '1's (land) and '0's (water), count the number of islands. An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.
+
+>Example 1:
+```
+11110
+11010
+11000
+00000
+```
+>Answer: 1
+
+>Example 2:
+```
+11000
+11000
+00100
+00011
+```
+>Answer: 3 
+
+
+__Solution__  
+思路：DFS。从一个节点开始DFS，并将访问过的点标记。记录总的label数量。
+```java
+public class Solution {
+    public void dfs(char[][] grid, boolean[][] visited, int i, int j) {
+        // i-1, j-1, i+1, j+1
+        if (i < 0 || 
+            j < 0 || 
+            i >= grid.length || 
+            j >= grid[0].length ||
+            visited[i][j] ||
+            grid[i][j] == '0') {// out of boundary or visited
+            return;
+        }
+        // mark current
+        visited[i][j] = true;
+        // go to next choices
+        dfs(grid, visited, i - 1, j);
+        dfs(grid, visited, i + 1, j);
+        dfs(grid, visited, i, j - 1);
+        dfs(grid, visited, i, j + 1);
+        // do not back track
+    }
+    public int numIslands(char[][] grid) {
+        if (grid == null ||
+            grid.length == 0 ||
+            grid[0] == null || 
+            grid[0].length == 0) {
+                return 0;
+        }
+        
+        int labels = 0;
+        int m = grid.length;
+        int n = grid[0].length;
+        boolean[][] visited = new boolean[m][n];
+        
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if (grid[i][j] == '1' && !visited[i][j]) {
+                    labels++;
+                    dfs(grid, visited, i, j);
+                }
+            }
+        }
+        return labels;
+    }
+}
+```
+思路2：不相交集合
+```java
+public class Solution {
+    private int[][] id;
+    public int numIslands(char[][] grid) {
+        if (grid == null || grid.length == 0 || grid[0] == null || grid[0].length == 0) {
+            return 0;
+        }
+        int m = grid.length;
+        int n = grid[0].length;
+        // init
+        
+        id = new int[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                id[i][j] = i * n + j;
+            }
+        }
+        // union
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == '1') {
+                    if (i > 0 && grid[i - 1][j] == '1') {
+                        union(i, j, i - 1, j);
+                    }
+                    if (j > 0 && grid[i][j - 1] == '1') {
+                        union(i, j, i, j - 1);
+                    }
+                }
+            }
+        }
+        // find 
+        Set<Integer> set = new HashSet<Integer>();
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == '1')
+                set.add(find(i, j));
+            }
+        }
+        return set.size();
+    }
+    public int find(int i, int j) {
+        if (id[i][j] == i * id[0].length + j) {
+            return id[i][j];
+        }
+        id[i][j] = find(id[i][j] / id[0].length, id[i][j] % id[0].length);
+        return id[i][j];
+    }
+    public void union(int r0, int c0, int r1, int c1) {
+        
+        int f0 = find(r0, c0);
+        int f1 = find(r1, c1);
+        //System.out.println(f0 + " " + f1);
+        id[f0 / id[0].length][f0 % id[0].length] = id[f1 / id[0].length][f1 % id[0].length];
+    }
+}
+
+```
+* * *
+
