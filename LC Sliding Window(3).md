@@ -1,9 +1,82 @@
 Sliding Window (3)  
 
-
+3 Longest Substring Without Repeating Characters  
 76 Minimum Window Substring    
 209 Minimum Size Subarray Sum  
 405 Maximum Size Subarray Sum Equals k  
+
+* * * 
+#### 3. Longest Substring Without Repeating Characters
+
+**Description**   
+>Given a string, find the length of the longest substring without repeating characters.
+>
+>Examples:
+>
+>Given "abcabcbb", the answer is "abc", which the length is 3.
+>
+>Given "bbbbb", the answer is "b", with the length of 1.
+>
+>Given "pwwkew", the answer is "wke", with the length of 3. Note that the answer must be a substring, "pwke" is a subsequence and not a substring.
+
+
+**[题目链接](https://leetcode.com/problems/longest-substring-without-repeating-characters/)**    
+
+**Solution**   
+**思路**  
+HashMap记录元素的index + two pointers扫描。  
+思路2. two pointer。对于 j,  j++直到找到一个match，更新min。然后i++，如此循环。 
+
+**代码**   
+**two pointer**  
+```java
+public class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        int[] map = new int[256];
+        int j = 0;
+        int max = 0;
+        for (int i = 0; i < s.length(); i++) {
+            while (j < s.length() && map[s.charAt(j)] == 0) {
+                max = Math.max(max, j - i + 1);
+                map[s.charAt(j)] = 1;
+                j++;
+            }
+            map[s.charAt(i)] = 0;
+        }
+        return max;
+    }
+}
+```
+**two pointer + hash** 
+```java
+public class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        if (s == null || s.length() == 0) {
+            return 0;
+        }
+        int pointer1 = 0;
+        int pointer2 = 0;
+        int max = 0;
+        HashMap<Character, Integer> hm = new HashMap();
+        while (pointer2 < s.length()) {
+            char c = s.charAt(pointer2);
+            //ignore all elements before pointer1
+            // elements before pointer1 is useless even bad  
+            // to make sure pointer1 will not go back
+            if (hm.containsKey(c) && hm.get(c) >= pointer1) {
+                pointer1 = hm.get(c) + 1;
+                hm.put(c, pointer2);
+            } else {
+                hm.put(c, pointer2);
+                max = Math.max(max, pointer2 - pointer1 + 1);
+            }
+            pointer2++;
+        }
+        return max;
+    }
+}
+```
+* * *
 
 #### 76. Minimum Window Substring  
 
@@ -18,7 +91,7 @@ T = "ABC"
 **[题目链接](https://leetcode.com/problems/minimum-window-substring/)**  
 **Solution**  
 **思路**  
-two pointers经典题目。对于pointer i, pointer j++直到找到一个match，更新min。然后i++，如此循环。  
+two pointers经典题目。对于pointer j, pointer j++直到找到一个match，更新min。然后i++，如此循环。  
 
 **代码**   
 ```java
