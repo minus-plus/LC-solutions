@@ -232,7 +232,7 @@ public class Solution {
         int f0 = find(r0, c0);
         int f1 = find(r1, c1);
         //System.out.println(f0 + " " + f1);
-        id[f0 / id[0].length][f0 % id[0].length] = id[f1 / id[0].length][f1 % id[0].length];
+        id[f0 / id[0].length][f0 % id[0].length] = f1;
     }
 }
 
