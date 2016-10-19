@@ -1,11 +1,26 @@
-Sliding Window (3)  
+Two Pointers - Sliding Window (5)  
 
 3 Longest Substring Without Repeating Characters  
 76 Minimum Window Substring    
 209 Minimum Size Subarray Sum  
 405 Maximum Size Subarray Sum Equals k  
+340 Longest Substring with At Most K Distinct Characters
 
-* * * 
+* * *
+```
+//本质是空间换时间，用hash table存储遍历过的状态，这样j就不用回退到i;
+for (i = 0; i < n; i++) {
+    while (j < n && !valid) {
+        update j;
+        j++;
+    }
+    if (valid) {
+        update result;
+    }
+    update i;
+}
+```
+* * *
 #### 3. Longest Substring Without Repeating Characters
 
 **Description**   
@@ -225,6 +240,74 @@ public class Solution405 {
         int re = s.maxSubArrayLen(nums, 3);
         System.out.println("result is " + re + ", should be " + 4);
         System.out.println("result is " + s.maxSubArrayLen(nums, 6) + ", should be " + 5);
+    }
+}
+```
+* * *
+
+#### 340 Longest Substring with At Most K Distinct Characters
+
+**Description**   
+>Given a string s, find the length of the longest substring T that contains at most k distinct characters.
+>Example
+>For example, Given s = "eceba", k = 3,
+>T is "eceb" which its length is 4.
+>Challenge
+>O(n), n is the size of the string s.
+
+**[题目链接](void)**  
+**Solution**  
+**思路**  
+窗口类two pointer题。用hashmap统计窗口内的字符数量，
+    1. j++直到hm.size() == k, 此时j point to窗口后一个位置;  
+    2. 检查hm.size() == k，exhausted search，j++直至s.charAt(j)不在hm中;  
+    3. update max = Math.max(max, j - i);
+    4. remove s.charAt(i); i++;
+
+**代码**   
+```java
+import java.util.*;
+public class Solution340 {
+    /**
+     * @param s : A string
+     * @return : The length of the longest substring
+     *           that contains at most k distinct characters.
+     */
+    public int findKDistinct(String s, int k) {
+        if (s == null || s.length() == 0 || k == 0) {
+            return 0;
+        }
+        HashMap<Character, Integer> hm = new HashMap<Character, Integer>();
+        int max = 0;
+        int j = 0;
+        for (int i = 0; i < s.length(); i++) {
+            while (j < s.length() && (hm.size() < k || hm.size() == k && hm.containsKey(s.charAt(j)))) {
+                char c = s.charAt(j);
+                if (!hm.containsKey(c)) {
+                    hm.put(c, 1);
+                } else {
+                    hm.put(c, hm.get(c) + 1);
+                }
+                j++;
+            }
+            if (hm.size() == k) {
+                max = Math.max(max, j - i);
+            }
+            char ci = s.charAt(i);
+            if (hm.get(ci) == 1) {
+                hm.remove(ci);
+            } else {
+                hm.put(ci, hm.get(ci) - 1);
+            }
+        }
+        return max;
+    }
+    public static void main(String[] args) {
+        Solution340 s = new Solution340();
+        System.out.println("result is " + s.findKDistinct("ecebda", 3) + ", should be " + 4); // eceb. ecb. 4
+        System.out.println("result is " + s.findKDistinct("ecebcda", 3) + ", should be " + 5); // ecebcb. ecb. 5
+        System.out.println("result is " + s.findKDistinct("ecebcbda", 3) + ", should be " + 6); // ecebcb. ecb. 6
+        System.out.println("result is " + s.findKDistinct("ecebcbdaaaaa", 3) + ", should be " + 7); // bdaaaaa. bda. 7
     }
 }
 ```
