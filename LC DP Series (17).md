@@ -16,6 +16,9 @@
 300 Longest Increasing Subsequence  
 398 [LintCode] Longest Increasing Continuous subsequence II
 * * * 
+LintCode Coins in a Line
+LintCode Coins in a Line II
+* * * 
 Minimum / Maximum  
 Yes or No  
 Count  
@@ -1330,3 +1333,118 @@ public class SolutionLint398 {
 }
 ```
 * * *
+##LintCode
+####  Coins in a Line
+
+**Description**   
+>There are n coins in a line. Two players take turns to take one or two coins from right side until there are no more coins left. The player who take the last coin wins.
+>
+>Could you please decide the first play will win or lose?
+>Example 
+```
+n = 1, return true.
+n = 2, return true.
+n = 3, return false.
+n = 4, return true.
+n = 5, return true.
+```
+
+**[题目链接](http://www.lintcode.com/en/problem/coins-in-a-line/)**  
+**Solution**  
+**思路**  
+技巧，隔层搜索。记忆化搜索。
+
+**代码**   
+```java
+public class Solution {
+    /**
+     * @param n: an integer
+     * @return: a boolean which equals to true if the first player will win
+     */
+    public boolean firstWillWin(int n) {
+        // write your code here
+        if (n == 0) {
+            return false;
+        }
+        if (n <= 2) {
+            return true;
+        }
+        int[] memo = new int[n + 1];
+        Arrays.fill(memo, -1);
+        return dfs(n, memo);
+    }
+    public boolean dfs(int n, int[] memo) {
+        if (n <= 0) {
+            return false;
+        }
+        if (n <= 2) {
+            return true;
+        }
+        if (memo[n] > -1) {
+            return memo[n] == 1 ? true :  false;
+        }
+        boolean re = dfs(n - 3, memo)  && (dfs(n - 2, memo) || dfs(n - 4, memo));
+        memo[n] = re ? 1 : 0;
+        return re;
+    }
+}
+```
+* * *
+####Coins in a Line II
+
+**Description**   
+>There are n coins with different value in a line. Two players take turns to take one or two coins from left side until there are no more coins left. The player who take the coins with the most value wins.
+>
+>Could you please decide the first player will win or lose?
+>Example
+>Given values array A = [1,2,2], return true.
+>
+>Given A = [1,2,4], return false.
+
+**[题目链接](http://www.lintcode.com/en/problem/coins-in-a-line-ii/)**  
+**Solution**  
+**思路**  
+与上一题类似，隔层搜索，记忆化搜索。  
+处理博弈类问题，可以用隔层搜索的方式，保持状态的一致性。  
+
+**代码**   
+```java
+public class Solution {
+    /**
+     * @param values: an array of integers
+     * @return: a boolean which equals to true if the first player will win
+     */
+    public boolean firstWillWin(int[] values) {
+        // write your code here
+        int[] memo = new int[values.length];
+        int sum = 0;
+        for (int v : values) {
+            sum += v;
+        }
+        int re = dfs(values, 0, memo);
+        return re + re > sum;
+    }
+    public int dfs(int[] values, int i, int[] memo) {
+        if (i >= values.length) {
+            return 0;
+        }
+        if (i == values.length - 1) {
+            return values[values.length - 1];
+        } 
+        if (i == values.length - 2) {
+            return values[values.length - 1] + values[values.length - 2];
+        }
+        if (memo[i] > 0) {
+            return memo[i];
+        }
+        int r1 = dfs(values, i + 2, memo);
+        int r2 = dfs(values, i + 3, memo);
+        int r3 = dfs(values, i + 4, memo);
+        
+        memo[i] = Math.max(Math.min(r1, r2) + values[i], Math.min(r2, r3) + values[i] + values[i + 1]);
+        return memo[i];
+    }
+}
+```
+* * *
+
