@@ -19,6 +19,7 @@
 LintCode Coins in a Line  
 LintCode Coins in a Line II  
 LintCode Coins in a Line III  
+LintCode Stone Game
 * * * 
 Minimum / Maximum  
 Yes or No  
@@ -1522,6 +1523,90 @@ public class SolutionCoinsIII {
         int[] a4 = new int[]{1,3,20,10,4};
         System.out.println(s.firstWillWin(a4) + ", should be false");
         
+    }
+}
+```
+* * *
+#### LintCode Stone Game 476
+
+**Description**   
+
+>There is a stone game.At the beginning of the game the player picks n piles of stones in a line.
+>The goal is to merge the stones in one pile observing the following rules:
+>At each step of the game,the player can merge two adjacent piles to a new pile.
+>The score is the number of stones in the new pile.
+>You are to determine the minimum of the total score.
+>Example
+>For [4, 1, 1, 4], in the best solution, the total score is 18:
+>Merge second and third piles => [4, 2, 4], score +2
+>Merge the first two piles => [6, 4]，score +6
+>Merge the last two piles => [10], score +10
+>Other two examples:
+>[1, 1, 1, 1] return 8
+>[4, 4, 5, 9] return 43
+**[题目链接]()**  
+**Solution**  
+**思路**  
+首先想到dfs。将大区间缩小为小区间，大区间的结果由小区间决定。
+f[i][j] = min(f[i][k], f[k + 1][j]) + sum(i, j)。通过memorization search存储小区间的结果，从而pruning。
+
+**代码**   
+```java
+public class SolutionGameStone {
+    /**
+     * @param A an integer array
+     * @return an integer
+     * dp[i][j] is the min total scores got in interval[i, j];
+     */
+    public int stoneGame(int[] A) {
+        // Write your code here
+        // Memorized search
+        if(A == null || A.length == 0){
+            return 0;
+        }
+
+        int n = A.length;
+        int[][] dp = new int[n][n];
+        // init
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                dp[i][j] = -1;
+            }
+        }
+        int[] sum = new int[n + 1];
+        sum[0] = 0;
+        for(int i = 0; i < n; i++){
+            sum[i + 1] = sum[i] + A[i];
+        }
+
+        return dfs(0, n - 1, sum, dp);
+    }
+
+    private int dfs(int l, int r, int[] sum, int[][] dp){
+        if (l >= r) {
+            return 0;
+        }
+        if (dp[l][r] > 0) {
+            return dp[l][r];
+        }
+        int s = sum[r + 1] - sum[l]; // comming scores in new pile
+        int min = Integer.MAX_VALUE;
+        for (int i = l; i < r; i++) {
+            int left = dfs(l, i, sum, dp); // scores got in left interval
+            int right = dfs(i + 1, r, sum, dp); // scores got in right interval
+            min = Math.min(min, left + right);
+        }
+        dp[l][r] = min + s;
+        return dp[l][r];
+    }
+    public static void main(String[] args) {
+        SolutionGameStone s = new SolutionGameStone();
+        int[] a1 = new int[]{4,1,1,4};
+        int[] a2 = new int[]{4,4,5,9};
+        int[] a3 = new int[]{1,1,1,1};
+        System.out.println(s.stoneGame(a1) + ", should be " + 18);
+        System.out.println(s.stoneGame(a2) + ", should be " + 43);
+        System.out.println(s.stoneGame(a3) + ", should be " + 8);
     }
 }
 ```
