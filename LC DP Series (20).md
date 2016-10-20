@@ -16,8 +16,9 @@
 300 Longest Increasing Subsequence  
 398 [LintCode] Longest Increasing Continuous subsequence II
 * * * 
-LintCode Coins in a Line
-LintCode Coins in a Line II
+LintCode Coins in a Line  
+LintCode Coins in a Line II  
+LintCode Coins in a Line III  
 * * * 
 Minimum / Maximum  
 Yes or No  
@@ -1443,6 +1444,84 @@ public class Solution {
         
         memo[i] = Math.max(Math.min(r1, r2) + values[i], Math.min(r2, r3) + values[i] + values[i + 1]);
         return memo[i];
+    }
+}
+```
+* * *
+#### Coins in a Line III
+
+**Description**   
+>There are n coins in a line. Two players take turns to take a coin from one of the ends of the line until there are no more coins left. The player with the larger amount of money wins.
+>Could you please decide the first player will win or lose?
+>
+>Example
+>Given array A = [3,2,2], return true.
+>
+>Given array A = [1,2,4], return true.
+>
+>Given array A = [1,20,4], return false.
+>
+Challenge
+>Follow Up Question:
+
+>If n is even. Is there any hacky algorithm that can decide whether first player will win or lose in O(1) memory and O(n) time?
+
+**[题目链接]()**  
+**Solution**  
+**思路**  
+同上题，记忆化搜索。  
+f[i][j]是i到j之间，first player能获取的最大值。  
+f[i][j] = max(min(f[i + 1][j - 1], f[i + 2][j]) + values[i], min(f[i + 1][j - 1], f[i][j - 2]) + values[j]); 隔层搜索  
+
+**代码**   
+```java
+public class SolutionCoinsIII {
+    /**
+     * @param values: an array of integers
+     * @return: a boolean which equals to true if the first player will win
+     */
+    public boolean firstWillWin(int[] values) {
+        // write your code here
+        int[][] memo = new int[values.length][values.length];
+        int sum = 0;
+        for (int v : values) {
+            sum += v;
+        }
+        int re = dfs(values, 0, values.length - 1, memo);
+        return re + re > sum;
+    }
+    public int dfs(int[] values, int i, int j, int[][] memo) {
+        if (i > j) {
+            return 0;
+        } 
+        if (i == j) {
+            return values[i];
+        }
+        if (i + 1 == j) {
+            return Math.max(values[i], values[j]);
+        }
+        
+        if (memo[i][j] > 0) {
+            return memo[i][j];
+        }
+        int r1 = dfs(values, i + 2, j, memo);
+        int r2 = dfs(values, i + 1, j - 1, memo);
+        int r3 = dfs(values, i, j - 2, memo);
+        
+        memo[i][j] = Math.max(Math.min(r1, r2) + values[i], Math.min(r2, r3) + values[j]);
+        return memo[i][j];
+    }
+    public static void main(String[] args) {
+        SolutionCoinsIII s = new SolutionCoinsIII();
+        int[] a1 = new int[]{3,2,2};
+        System.out.println(s.firstWillWin(a1) + ", should be true");
+        int[] a2 = new int[]{3,6,2};
+        System.out.println(s.firstWillWin(a2) + ", should be false");
+        int[] a3 = new int[]{1,2,4};
+        System.out.println(s.firstWillWin(a3) + ", should be true");
+        int[] a4 = new int[]{1,3,20,10,4};
+        System.out.println(s.firstWillWin(a4) + ", should be false");
+        
     }
 }
 ```
