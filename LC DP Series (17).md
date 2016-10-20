@@ -13,6 +13,8 @@
 198 House Robber  
 213 House Robber II  
 221 Maximal Square  
+300 Longest Increasing Subsequence  
+398 [LintCode] Longest Increasing Continuous subsequence II
 * * * 
 Minimum / Maximum  
 Yes or No  
@@ -1198,6 +1200,132 @@ public class Solution {
             }
         }
         return maxLen * maxLen;
+    }
+}
+```
+* * *
+#### 300. Longest Increasing Subsequence  
+
+**Description**   
+>Given an unsorted array of integers, find the length of longest increasing subsequence.
+>
+>For example,
+Given [10, 9, 2, 5, 3, 7, 101, 18],
+The longest increasing subsequence is [2, 3, 7, 101], therefore the length is 4. Note that there may be more than one LIS combination, it is only necessary for you to return the length.
+>
+>Your algorithm should run in O(n2) complexity.
+
+**[题目链接](https://leetcode.com/problems/longest-increasing-subsequence/)**  
+**Solution**  
+**思路**  
+dp. 直接看代码。
+
+**代码**   
+```java
+public class Solution {
+    public int lengthOfLIS(int[] nums) {
+        // typical dynamic prgramming
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        int max = 1;
+        int[] dp = new int[nums.length];
+        dp[0] = 1;
+        
+        for (int i=1; i<nums.length; i++) {
+            dp[i] = 1;
+            for (int j=0; j<i; j++) {
+                if (nums[i] > nums[j]) {
+                    dp[i] = Math.max(dp[j] + 1, dp[i]);
+                }
+                max = Math.max(dp[i], max);
+            }
+        }
+        return max;
+    }
+}
+```
+* * *
+
+#### [LintCode] 398 Longest Increasing Continuous subsequence II
+
+**Description** 
+>Give you an integer matrix (with row size n, column size m)，find the longest increasing continuous subsequence in this matrix. (The definition of the longest increasing continuous subsequence here can start at any row or column and go up/down/right/left any direction).
+  
+
+**[题目链接]()**  
+**Solution**  
+**思路**  
+动态规划之memerization dfs。将搜索到的smaller size结果存起来，继续搜索之前，先查找。通过这种方式剪枝，O(n * m) time and O(n * m) space.  
+本题假设:
+    1. 矩阵中没有重复;
+    2. 升序列中，均有arr[i] < arr[i + 1]
+违反上述两条假设，可能会产生死循环。
+
+**代码**   
+```java
+public class SolutionLint398 {
+    /**
+     * @param A an integer matrix
+     * @return  an integer
+     */
+    public int longestIncreasingContinuousSubsequenceII(int[][] A) {
+        if (A == null || A.length == 0 || A[0] == null || A[0].length == 0) {
+            return 0;
+        }
+        int m = A.length;
+        int n = A[0].length;
+        int[][] dp = new int[m][n];
+        int max = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                max = Math.max(max, dfs(A, i, j, Long.MIN_VALUE, dp));
+            }
+        }
+        return max;        
+    }
+
+    private int dfs(int[][] A, int r, int c, long prev, int[][] dp) {
+        if (r < 0 || c < 0 || r >= A.length || c >= A[0].length || A[r][c] < prev) {
+            return 0;
+        }
+        if (dp[r][c] > 0) {
+            return dp[r][c];
+        }
+        dp[r][c] = 1;
+        int next = 0;
+        next = Math.max(dfs(A, r - 1, c, A[r][c], dp), next);
+        next = Math.max(dfs(A, r + 1, c, A[r][c], dp), next);
+        next = Math.max(dfs(A, r, c - 1, A[r][c], dp), next);
+        next = Math.max(dfs(A, r, c + 1, A[r][c], dp), next);
+        dp[r][c] += next;
+        return dp[r][c];
+        
+    }
+    public static void main(String[] args) {
+        SolutionLint398 s = new SolutionLint398();
+        int[][] A = new int[][] {
+                {1 ,2 ,3 ,4 ,5},
+                {16,17,24,23,6},
+                {15,18,25,22,7},
+                {14,19,20,21,8},
+                {13,12,11,10,9}};
+        int ra = s.longestIncreasingContinuousSubsequenceII(A);
+        System.out.println("result is " + ra + ", should be " + 25);
+        int[][] B = new int[][] {{1, 2}, {1, 2}};
+        int rb = s.longestIncreasingContinuousSubsequenceII(B);
+        System.out.println("result is " + rb + ", should be " + 2);
+        // contains duplicate elements
+        int[][] C = new int[][] {
+                {1 ,2 ,3 ,4 ,5},
+                {16,17,24,23,6},
+                {15,18,25,22,7},
+                {14,19,20,20,8},
+                {13,12,11,10,9}};
+        int rc = s.longestIncreasingContinuousSubsequenceII(C);
+        System.out.println("result is " + rc + ", should be " + 21);
+        // if A[r][c] < prev, will dead loop
+        
     }
 }
 ```
