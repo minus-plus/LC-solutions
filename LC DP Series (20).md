@@ -4,6 +4,7 @@
 64 Minimum Path Sum  
 70 Climbing Stairs  
 72 Edit Distance  
+87 Scramble String
 97 Interleaving String  
 115 Distinct Subsequences  
 139 Word Break  
@@ -558,6 +559,107 @@ public class Solution {
 }
 ```
 * * *
+#### 87. Scramble String  
+
+**Description**   
+>Given a string s1, we may represent it as a binary tree by partitioning it to two non-empty substrings recursively.
+>
+>Below is one possible representation of s1 = "great":
+```
+    great
+   /    \
+  gr    eat
+ / \    /  \
+g   r  e   at
+           / \
+          a   t
+```
+>To scramble the string, we may choose any non-leaf node and swap its two children.
+>
+>For example, if we choose the node "gr" and swap its two children, it produces a scrambled string "rgeat".
+```
+    rgeat
+   /    \
+  rg    eat
+ / \    /  \
+r   g  e   at
+           / \
+          a   t
+```
+>We say that "rgeat" is a scrambled string of "great".
+>
+>Similarly, if we continue to swap the children of nodes "eat" and "at", it produces a scrambled string "rgtae".
+```
+    rgtae
+   /    \
+  rg    tae
+ / \    /  \
+r   g  ta  e
+       / \
+      t   a
+```
+>
+>We say that "rgtae" is a scrambled string of "great".
+>
+>Given two strings s1 and s2 of the same length, determine if s2 is a scrambled string of s1.
+
+**[题目链接](https://leetcode.com/problems/scramble-string/)**  
+**Solution**  
+**思路**  
+DFS + memorization search.  
+如何判定匹配。split s1 into two parts from left, split s2 into two parts both from left and right, match them. if one get true return true. 
+
+**代码**   
+```java
+public class Solution {
+    public boolean isScramble(String s1, String s2) {
+        if (s1 == null || s2 == null) {
+            return false;
+        }
+        // check valid
+        int m = s1.length();
+        int[][][] dp = new int[m][m][m + 1]; 
+        return dfs(s1, s2, 0, 0, m, dp);
+    }
+    public boolean dfs(String s1, String s2, int i, int j, int len, int[][][] dp) {
+        //System.out.println(i + " i, j " + j + ", len " + len);
+        if (len == 1) {
+            return s1.charAt(i) == s2.charAt(j);
+        }
+        if (dp[i][j][len] > 0) {
+            return dp[i][j][len] == 2 ? true : false;
+        }
+        dp[i][j][len] = 1;
+        if (!isValid(s1.substring(i, i + len), s2.substring(j, j + len))) {
+            return false;
+        }
+        if (s1.substring(i, i + len).equals(s2.substring(j, j + len))) {
+            dp[i][j][len] = 2;
+            return true;
+        }
+       
+        for (int l = 1; l < len; l++) {
+            if (dfs(s1, s2, i, j, l, dp) && dfs(s1, s2, i + l, j + l, len - l, dp) ||
+                dfs(s1, s2, i, j + len - l, l, dp) && dfs(s1, s2, i + l, j, len - l, dp)) {
+                dp[i][j][len] = 2;
+                return true;
+            }
+        }
+        return false;
+    }
+    public boolean isValid(String s1, String s2) {
+        char[] a1 = s1.toCharArray();
+        char[] a2 = s2.toCharArray(); 
+        Arrays.sort(a1);
+        Arrays.sort(a2);
+        String ss1 = new String(a1);
+        String ss2 = new String(a2);
+        return ss1.equals(ss2);
+    }
+}
+```
+* * *
+
 #### 97. Interleaving String 
 
 **Description**   
