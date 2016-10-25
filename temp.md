@@ -117,4 +117,114 @@ public class Solution {
         return solve(dp, 1, n);
     }
 ```
+**dp**  
+```java
+public class Solution {
+    public int getMoneyAmount(int n) {
+        int[][] dp = new int[n + 2][n + 2];
+        
+        for (int len = 1; len < n; len++) {
+            for (int i = 1; i + len <= n; i++) {
+                int min = Integer.MAX_VALUE;
+                int j = i + len;
+                for (int k = i; k <= j; k++) {
+                    min = Math.min(min, k + Math.max(dp[i][k - 1], dp[k + 1][j]));
+                }
+                dp[i][j] = min;
+            }
+        }
+        return dp[1][n];
+    }
+}
+```
 * * *
+####  Interval Minimum Number
+
+**Description**   
+>Given an integer array (index from 0 to n-1, where n is the size of this array), and an query list. Each query has two integers [start, end]. For each query, calculate the minimum number between index start and end in the given array, return the result list.
+>Example
+For array [1,2,7,8,5], and queries [(1,2),(0,4),(2,4)], return [2,1,5]
+
+**[题目链接](https://www.lintcode.com/en/problem/interval-minimum-number/#)**  
+**Solution**  
+**思路**  
+Segment Tree. Build and query.  
+
+**代码**   
+```java
+/**
+ * Definition of Interval:
+ * public classs Interval {
+ *     int start, end;
+ *     Interval(int start, int end) {
+ *         this.start = start;
+ *         this.end = end;
+ *     }
+ */
+class SegmentNode {
+     int start;
+     int end;
+     int min;
+     SegmentNode left;
+     SegmentNode right;
+     public SegmentNode(int start, int end, int min) {
+         this.start = start;
+         this.end = end;
+         this.left = null;
+         this.right = null;
+         this.min = min;
+     }
+}
+public class Solution {
+    /**
+     *@param A, queries: Given an integer array and an query list
+     *@return: The result list
+     */
+    
+    public ArrayList<Integer> intervalMinNumber(int[] A, 
+                                                ArrayList<Interval> queries) {
+        // write your code here
+        ArrayList<Integer> result = new ArrayList<Integer>();
+        if (A == null || A.length == 0 || queries == null || queries.size() == 0) {
+            return result;
+        }
+        SegmentNode root = build(A, 0, A.length - 1);
+        for (Interval in : queries) {
+            result.add(query(root, in.start, in.end));
+        }
+        return result;
+    }
+    public SegmentNode build(int[] A, int start, int end) {
+        if (start == end) {
+            return new SegmentNode(start, end, A[start]);
+        }
+        SegmentNode root = new SegmentNode(start, end, Integer.MAX_VALUE);
+        int mid = (start + end) / 2;
+        SegmentNode left = build(A, start, mid);
+        SegmentNode right = build(A, mid + 1, end);
+        root.left = left;
+        root.right = right;
+        root.min = Math.min(left.min, right.min);
+        //System.out.println(start + " " + end + " " + root.min);
+        return root;
+    }
+    public int query(SegmentNode root, int start, int end) {
+        if (start == root.start && end == root.end || root.start == root.end) {
+            return root.min;
+        }
+        
+        int mid = (root.start + root.end) / 2;
+        if (start <= mid && end >= mid + 1) {
+            int left = query(root.left, start, mid);
+            int right = query(root.right, mid + 1, end);
+            return Math.min(left, right);
+        }
+        if (end <= mid) {
+            return query(root.left, start, end);
+        }
+        return query(root.right, start, end);
+    }
+}
+```
+* * *
+
