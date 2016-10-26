@@ -1,144 +1,205 @@
-#### 374. Guess Number Higher or Lower
-
-__Description__   
->We are playing the Guess Game. The game is as follows:
->
->I pick a number from 1 to n. You have to guess which number I picked.
->
->Every time you guess wrong, I'll tell you whether the number is higher or lower.
->
->You call a pre-defined API guess(int num) which returns 3 possible results (-1, 1, or 0):
-```
--1 : My number is lower
- 1 : My number is higher
- 0 : Congrats! You got it!
- ```
->Example:
-```
-n = 10, I pick 6.
-```
-
->Return 6.
-
-__Solution__  
-**思路** 
-简单的binary search   
-```java
-/* The guess API is defined in the parent class GuessGame.
-   @param num, your guess
-   @return -1 if my number is lower, 1 if my number is higher, otherwise return 0
-      int guess(int num); */
-
-public class Solution extends GuessGame {
-    public int guessNumber(int n) {
-        int start = 1;
-        int end = n;
-        while (start + 1 < end) {
-            int mid = start + (end - start) / 2;
-            if (guess(mid) < 0) {
-                end = mid;
-            } else if (guess(mid) > 0) {
-                start = mid;
-            } else {
-                return mid;
-            }
-        }
-        if (guess(start) == 0) {
-            return start;
-        }
-        if (guess(end) == 0) {
-            return end;
-        }
-        return -1;
-    }
-}
-```
-* * * 
-
-#### 375. Guess Number Higher or Lower II  
+#### 201. Segment Tree Build
 
 **Description**   
->We are playing the Guess Game. The game is as follows:
->
->I pick a number from 1 to n. You have to guess which number I picked.
->
->Every time you guess wrong, I'll tell you whether the number I picked is higher or lower.
->
->However, when you guess a particular number x, and you guess wrong, you pay $x. You win the game when you guess the number I picked.
->
->Example:
->
->n = 10, I pick 8.
->
->First round:  You guess 5, I tell you that it's higher. You pay $5.
->Second round: You guess 7, I tell you that it's higher. You pay $7.
->Third round:  You guess 9, I tell you that it's lower. You pay $9.
->
->Game over. 8 is the number I picked.
->
->You end up paying $5 + $7 + $9 = $21.
->Given a particular n ≥ 1, find out how much money you need to have to guarantee a win.
+>The structure of Segment Tree is a binary tree which each node has two attributes start and end denote an segment / interval.
 
-**[题目链接](https://leetcode.com/problems/guess-number-higher-or-lower-ii/)**  
+>start and end are both integers, they should be assigned in following rules:
+
+>The root's start and end is given by build method.
+The left child of node A has start=A.left, end=(A.left + A.right) / 2.
+>The right child of node A has start=(A.left + A.right) / 2 + 1, end=A.right.
+if start equals to end, there will be no children for this node.
+>Implement a build method with two parameters start and end, so that we can create a corresponding segment tree with every node has the correct start and end value, return the root of this segment tree.
+
+**[题目链接](https://www.lintcode.com/en/problem/segment-tree-build)**  
 **Solution**  
 **思路**  
-分析：题目要求在最坏情况下我们至少要付出多少钱才能赢。  枚举所有策略。  
-所谓最坏情况是在每个策略中每一步均猜错，但在得知higher或lower之后选择最优策略去猜。  
-以`1， 2， 3`为例，3种策略分别为（1 + 2 = 3， 2， 3 + 1 = 4），最优策略为2。`1,2,3,4`，最优策略是4。
-```
-				1234 
-		  / 1  |2   | 3 \4
-		234  1|34 12|4   123
-		 |     |    |     |
-         3     3    2     2
-```
-本题用dfs + memorization的方法解决。
+
+
 **代码**   
 ```java
+/**
+ * Definition of SegmentTreeNode:
+ * public class SegmentTreeNode {
+ *     public int start, end;
+ *     public SegmentTreeNode left, right;
+ *     public SegmentTreeNode(int start, int end) {
+ *         this.start = start, this.end = end;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
 public class Solution {
-    public int solve(int[][] dp, int l, int r) {
-        if (l >= r) {
-            return 0;
+    /**
+     *@param start, end: Denote an segment / interval
+     *@return: The root of Segment Tree
+     */
+    public SegmentTreeNode build(int start, int end) {
+        // write your code here
+        if (start > end) {
+            return null;
         }
-        if (dp[l][r] != Integer.MAX_VALUE) {
-            return dp[l][r];
+        SegmentTreeNode node = new SegmentTreeNode(start, end);
+        if (start == end) {
+            return node;
         }
-        for (int i = l; i <= r; i++) {
-            dp[l][r] = Math.min(dp[l][r], i + Math.max(solve(dp, i + 1, r), solve(dp, l, i - 1)));
-        }
-        return dp[l][r];
-
-    }
-    public int getMoneyAmount(int n) {
-        int[][] dp = new int[n + 1][n + 1];
-        for(int[] row: dp){
-            Arrays.fill(row, Integer.MAX_VALUE);
-        }
-        return solve(dp, 1, n);
-    }
-```
-**dp**  
-```java
-public class Solution {
-    public int getMoneyAmount(int n) {
-        int[][] dp = new int[n + 2][n + 2];
-        
-        for (int len = 1; len < n; len++) {
-            for (int i = 1; i + len <= n; i++) {
-                int min = Integer.MAX_VALUE;
-                int j = i + len;
-                for (int k = i; k <= j; k++) {
-                    min = Math.min(min, k + Math.max(dp[i][k - 1], dp[k + 1][j]));
-                }
-                dp[i][j] = min;
-            }
-        }
-        return dp[1][n];
+        SegmentTreeNode left = build(start, (start + end) / 2);
+        SegmentTreeNode right = build((start + end) / 2 + 1, end);
+        node.left = left;
+        node.right = right;
+        return node;
     }
 }
 ```
 * * *
-####  Interval Minimum Number
+#### 202. Segment Tree Query
+
+**Description**   
+>For an integer array (index from 0 to n-1, where n is the size of this array), in the corresponding SegmentTree, each node stores an extra attribute max to denote the maximum number in the interval of the array (index from start to end).
+>
+>Design a query method with three parameters root, start and end, find the maximum number in the interval [start, end] by the given root of segment tree.
+>Example
+>For array [1, 4, 2, 3], the corresponding Segment Tree is:
+
+```
+
+                  [0, 3, max=4]
+                 /             \
+          [0,1,max=4]        [2,3,max=3]
+          /         \        /         \
+   [0,0,max=1] [1,1,max=4] [2,2,max=2], [3,3,max=3]
+```
+query(root, 1, 1), return 4
+
+query(root, 1, 2), return 4
+
+query(root, 2, 3), return 3
+
+query(root, 0, 2), return 4
+
+**[题目链接](https://www.lintcode.com/en/problem/segment-tree-query/#)**  
+**Solution**  
+**思路**  
+
+
+**代码**   
+```java
+/**
+ * Definition of SegmentTreeNode:
+ * public class SegmentTreeNode {
+ *     public int start, end, max;
+ *     public SegmentTreeNode left, right;
+ *     public SegmentTreeNode(int start, int end, int max) {
+ *         this.start = start;
+ *         this.end = end;
+ *         this.max = max
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+public class Solution {
+    /**
+     *@param root, start, end: The root of segment tree and 
+     *                         an segment / interval
+     *@return: The maximum number in the interval [start, end]
+     */
+    public int query(SegmentTreeNode root, int start, int end) {
+        // write your code here
+        if (root == null || start > root.end || end < root.start || start > end) {
+            return Integer.MIN_VALUE;
+        }
+        if (start == root.start && end == root.end || root.start == root.end) {
+            return root.max;
+        }
+        int mid = (root.start + root.end) / 2;
+        if (start <= mid && end >= mid + 1) {
+            int left = query(root.left, start, mid);
+            int right = query(root.right, mid + 1, end);
+            return Math.max(left, right);
+        }
+        if (end <= mid) {
+            return query(root.left, start, end);
+        }
+        return query(root.right, start, end);
+    }
+}
+```
+* * *
+####  203. Segment Tree Modify
+
+**Description**   
+>For a Maximum Segment Tree, which each node has an extra value max to store the maximum value in this node's interval.
+>
+>Implement a modify function with three parameter root, index and value to change the node's value with [start, end] = [index, index] to the new given value. Make sure after this change, every node in segment tree still has the max attribute with the correct value.
+>Example
+For segment tree:
+
+```
+                      [1, 4, max=3]
+                    /                \
+        [1, 2, max=2]                [3, 4, max=3]
+       /              \             /             \
+[1, 1, max=2], [2, 2, max=1], [3, 3, max=0], [4, 4, max=3]
+if call modify(root, 2, 4), we can get:
+
+                      [1, 4, max=4]
+                    /                \
+        [1, 2, max=4]                [3, 4, max=3]
+       /              \             /             \
+[1, 1, max=2], [2, 2, max=4], [3, 3, max=0], [4, 4, max=3]
+or call modify(root, 4, 0), we can get:
+
+                      [1, 4, max=2]
+                    /                \
+        [1, 2, max=2]                [3, 4, max=0]
+       /              \             /             \
+[1, 1, max=2], [2, 2, max=1], [3, 3, max=0], [4, 4, max=0]
+```
+
+**[题目链接]()**  
+**Solution**  
+**思路**  
+
+
+**代码**   
+```java
+/**
+ * Definition of SegmentTreeNode:
+ * public class SegmentTreeNode {
+ *     public int start, end, max;
+ *     public SegmentTreeNode left, right;
+ *     public SegmentTreeNode(int start, int end, int max) {
+ *         this.start = start;
+ *         this.end = end;
+ *         this.max = max
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+public class Solution {
+    /**
+     *@param root, index, value: The root of segment tree and 
+     *@ change the node's value with [index, index] to the new given value
+     *@return: void
+     */
+    public void modify(SegmentTreeNode root, int index, int value) {
+        // write your code here
+        if (root.start == root.end) {
+            root.max = value;
+            return;
+        }
+        int mid = (root.start + root.end) / 2;
+        if (index <= mid) {
+            modify(root.left, index, value);
+        } else {
+            modify(root.right, index, value);
+        }
+        root.max = Math.max(root.left.max, root.right.max);
+    }
+}
+```
+* * *
+#### 205. Interval Minimum Number
 
 **Description**   
 >Given an integer array (index from 0 to n-1, where n is the size of this array), and an query list. Each query has two integers [start, end]. For each query, calculate the minimum number between index start and end in the given array, return the result list.
@@ -227,7 +288,7 @@ public class Solution {
 }
 ```
 * * *
-#### Interval Sum
+#### 206. Interval Sum
 
 **Description**   
 >Given an integer array (index from 0 to n-1, where n is the size of this array), and an query list. Each query has two integers [start, end]. For each query, calculate the sum number between index start and end in the given array, return the result list.
@@ -315,7 +376,7 @@ public class Solution {
 
 ```
 * * *
-####  Interval Sum II
+####  207. Interval Sum II
 
 **Description**   
 >Given an integer array in the construct method, implement two methods query(start, end) and modify(index, value):
@@ -440,7 +501,79 @@ public class Solution {
 }
 ```
 * * *
-#### Count of Smaller Number
+####  247. Segment Tree Query II
+
+**Description**   
+>For an array, we can build a SegmentTree for it, each node stores an extra attribute count to denote the number of elements in the the array which value is between interval start and end. (The array may not fully filled by elements)
+>
+>Design a query method with three parameters root, start and end, find the number of elements in the in array's interval [start, end] by the given root of value SegmentTree.
+>Example
+>For array [0, 2, 3], the corresponding value Segment Tree is:
+
+```
+                     [0, 3, count=3]
+                     /             \
+          [0,1,count=1]             [2,3,count=2]
+          /         \               /            \
+   [0,0,count=1] [1,1,count=0] [2,2,count=1], [3,3,count=1]
+```
+>query(1, 1), return 0
+>
+>query(1, 2), return 1
+>
+>query(2, 3), return 2
+>
+>query(0, 2), return 2
+
+**[题目链接](https://www.lintcode.com/en/problem/segment-tree-query-ii/#)**  
+**Solution**  
+**思路**  
+
+
+**代码**   
+```java
+/**
+ * Definition of SegmentTreeNode:
+ * public class SegmentTreeNode {
+ *     public int start, end, count;
+ *     public SegmentTreeNode left, right;
+ *     public SegmentTreeNode(int start, int end, int count) {
+ *         this.start = start;
+ *         this.end = end;
+ *         this.count = count;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+public class Solution {
+    /**
+     *@param root, start, end: The root of segment tree and 
+     *                         an segment / interval
+     *@return: The count number in the interval [start, end]
+     */
+    public int query(SegmentTreeNode root, int start, int end) {
+        // write your code here
+        if (root == null || start > root.end || end < root.start || start > end) {
+            return 0;
+        }
+        if (start == root.start && end == root.end  || root.start  == root.end) {
+            return root.count;
+        }
+        int mid = (root.start + root.end) / 2;
+        if (start <= mid && end >= mid + 1) {
+            int left = query(root.left, start, mid);
+            int right = query(root.right, mid + 1, end);
+            return left + right;
+        }
+        if (end <= mid) {
+            return query(root.left, start, end);
+        }
+        return query(root.right, start, end);
+    }
+}
+```
+* * *
+#### 248. Count of Smaller Number
 
 **Description**   
 >Give you an integer array (index from 0 to n-1, where n is the size of this array, value from 0 to 10000) and an query list. For each query, give you an integer, return the number of element in the array that are smaller than the given integer.
@@ -534,7 +667,7 @@ public class Solution {
 
 ```
 * * *
-#### Count of Smaller Number before itself
+#### 249. Count of Smaller Number before itself
 
 **Description**   
 >Give you an integer array (index from 0 to n-1, where n is the size of this array, value from 0 to 10000) . For each element Ai in the array, count the number of element before this element Ai is smaller than it and return count number array.
@@ -629,4 +762,66 @@ public class Solution {
 
 ```
 * * *
+####  439. Segment Tree Build II
 
+**Description**   
+>The structure of Segment Tree is a binary tree which each node has two attributes start and end denote an segment / interval.
+>
+>start and end are both integers, they should be assigned in following rules:
+
+>The root's start and end is given by build method.
+The left child of node A has start=A.left, end=(A.left + A.right) / 2.
+>The right child of node A has start=(A.left + A.right) / 2 + 1, end=A.right.
+if start equals to end, there will be no children for this node.
+>Implement a build method with a given array, so that we can create a corresponding segment tree with every node value represent the corresponding interval max value in the array, return the root of this segment tree.
+
+**[题目链接](https://www.lintcode.com/en/problem/segment-tree-build-ii/)**  
+**Solution**  
+**思路**  
+
+**代码**   
+```java
+/**
+ * Definition of SegmentTreeNode:
+ * public class SegmentTreeNode {
+ *     public int start, end, max;
+ *     public SegmentTreeNode left, right;
+ *     public SegmentTreeNode(int start, int end, int max) {
+ *         this.start = start;
+ *         this.end = end;
+ *         this.max = max
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+public class Solution {
+    /**
+     *@param A: a list of integer
+     *@return: The root of Segment Tree
+     */
+    public SegmentTreeNode build(int[] A) {
+        // write your code here
+        // corner case
+        if (A == null || A.length == 0) {
+            return null;
+        }
+        return build(A, 0, A.length - 1);
+    }
+    public SegmentTreeNode build(int[] A, int start, int end) {
+        if (start > end) {
+            return null;
+        }
+        if (start == end) {
+            return new SegmentTreeNode(start, end, A[start]);
+        }
+        SegmentTreeNode node = new SegmentTreeNode(start, end, Integer.MIN_VALUE);
+        SegmentTreeNode left = build(A, start, (start + end) / 2);
+        SegmentTreeNode right = build(A, (start + end) / 2 + 1, end);
+        node.left = left;
+        node.right = right;
+        node.max = Math.max(left.max, right.max);
+        return node;
+    }
+}
+```
+* * *
