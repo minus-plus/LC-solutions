@@ -1,11 +1,11 @@
 #### LintCode Backpack
 
 **Description**   
->Given n items with size Ai, an integer m denotes the size of a backpack. How full you can fill this backpack?
->Example
-If we have 4 items with size [2, 3, 5, 7], the backpack size is 11, we can select [2, 3, 5], so that the max size we can fill this backpack is 10. If the backpack size is 12. we can select [2, 3, 7] so that we can fulfill the backpack.
+>Given n items with size Ai, an integer m denotes the size of a backpack. How full you can fill this backpack?  
+>Example  
+If we have 4 items with size [2, 3, 5, 7], the backpack size is 11, we can select [2, 3, 5], so that the max size we can fill this backpack is 10. If the backpack size is 12. we can select [2, 3, 7] so that we can fulfill the backpack.  
 >
->You function should return the max size we can fill in the given backpack.
+>You function should return the max size we can fill in the given backpack.  
 
 **[题目链接](http://www.lintcode.com/en/problem/backpack/)**  
 **Solution**  
@@ -116,9 +116,9 @@ public class Solution {
 * * *
 ####  Backpack II
 
-**Description**   
->Given n items with size Ai and value Vi, and a backpack with size m. What's the maximum value can you put into the backpack?
->Given 4 items with size [2, 3, 5, 7] and value [1, 5, 2, 4], and a backpack with size 10. The maximum value is 9.
+**Description**     
+>Given n items with size Ai and value Vi, and a backpack with size m. What's the maximum value can you put into the backpack?  
+>Given 4 items with size [2, 3, 5, 7] and value [1, 5, 2, 4], and a backpack with size 10. The maximum value is 9.  
 
 **[题目链接](http://www.lintcode.com/en/problem/backpack-ii/)**  
 **Solution**  
@@ -356,13 +356,13 @@ public class SolutionBackPackIII {
 #### Backpack IV
 
 **Description**   
->Given n items with size nums[i] which an integer array and all positive numbers, no duplicates. An integer target denotes the size of a backpack. Find the number of possible fill the backpack.
-Each item may be chosen unlimited number of times.
->Example
->Given candidate items [2,3,6,7] and target 7,
->A solution set is:  [7]
->[2, 2, 3]
->return 2
+>Given n items with size nums[i] which an integer array and all positive numbers, no duplicates. An integer target denotes the size of a backpack.   Find the number of possible fill the backpack.  
+Each item may be chosen unlimited number of times.  
+>Example  
+>Given candidate items [2,3,6,7] and target 7,   
+>A solution set is:  [7]   
+>[2, 2, 3]   
+>return 2   
 
 **[题目链接]()**  
 **Solution**  
@@ -442,13 +442,13 @@ public class SolutionBackPackIV {
 #### Backpack V 
 
 **Description**   
->Given n items with size nums[i] which an integer array and all positive numbers. An integer target denotes the size of a backpack. Find the number of possible fill the backpack.
->Each item may only be used once.
->Example
->Given candidate items [1,2,3,3,7] and target 7,
->A solution set is:  [7]
-> [1, 3, 3]  
->  return 2
+>Given n items with size nums[i] which an integer array and all positive numbers. An integer target denotes the size of a backpack. Find the number of possible fill the backpack.  
+>Each item may only be used once.  
+>Example  
+>Given candidate items [1,2,3,3,7] and target 7,  
+>A solution set is:  [7]  
+> [1, 3, 3]    
+>  return 2  
 
 **[题目链接]()**  
 **Solution**  
