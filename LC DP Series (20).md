@@ -21,6 +21,9 @@ LintCode Coins in a Line
 LintCode Coins in a Line II  
 LintCode Coins in a Line III  
 LintCode Stone Game
+LintCode Paint House
+LintCode Paint House II
+
 * * * 
 Minimum / Maximum  
 Yes or No  
@@ -1714,3 +1717,203 @@ public class SolutionGameStone {
 ```
 * * *
 
+#### Paint House
+
+**Description**   
+> There are a row of n houses, each house can be painted with one of the three colors: red, blue or green. The cost of painting each house with a certain color is different. You have to paint all the houses such that no two adjacent houses have the same color.
+> 
+> The cost of painting each house with a certain color is represented by a n x 3 cost matrix. For example, costs[0][0] is the cost of painting house 0 with color red; costs[1][2] is the cost of painting house 1 with color green, and so on... Find the minimum cost to paint all houses.
+> 
+>  Notice
+> 
+> All costs are positive integers.
+> 
+> Have you met this question in a real interview? Yes
+> Example
+> Given costs = [[14,2,11],[11,14,5],[14,3,10]] return 10
+> 
+> house 0 is blue, house 1 is green, house 2 is blue, 2 + 5 + 3 = 10
+
+**[题目链接]()**  
+**Solution**  
+**思路**  
+动归 + 滚动数组优化。  
+
+**代码**   
+```java
+public class Solution {
+    /**
+     * @param costs n x 3 cost matrix
+     * @return an integer, the minimum cost to paint all houses
+     */
+    public int minCost(int[][] costs) {
+        // Write your code here\
+        if (costs == null || costs.length == 0 || costs[0] == null || costs[0].length < 3) {
+            return 0;
+        }
+        int m = costs.length;
+        int[][] dp = new int[2][3];
+        for (int i = 0; i < 3; i++) {
+            dp[0][i] = costs[0][i];
+        }
+        for (int i = 1; i < costs.length; i++) {
+            for (int j = 0; j < 3; j++) {
+                dp[i % 2][j] = Math.min(dp[(i - 1) % 2][(j + 1) % 3], dp[(i - 1) % 2][(j + 2) % 3]) + costs[i][j];
+            }
+        }
+        return Math.min(dp[(m - 1) % 2][0], Math.min(dp[(m - 1) % 2][1], dp[(m - 1) % 2][2]));
+    }
+}
+```
+* * *
+
+#### Paint House II
+
+**Description**   
+> There are a row of n houses, each house can be painted with one of the k colors. The cost of painting each house with a certain color is different. You have to paint all the houses such that no two adjacent houses have the same color.
+> 
+> The cost of painting each house with a certain color is represented by a n x k cost matrix. For example, costs[0][0] is the cost of painting house 0 with color 0; costs[1][2] is the cost of painting house 1 with color 2, and so on... Find the minimum cost to paint all houses.
+> 
+>  Notice
+> 
+> All costs are positive integers.
+> 
+> Have you met this question in a real interview? Yes
+> Example
+> Given n = 3, k = 3, costs = [[14,2,11],[11,14,5],[14,3,10]] return 10
+> 
+> house 0 is color 2, house 1 is color 3, house 2 is color 2, 2 + 5 + 3 = 10
+> 
+> Challenge 
+> Could you solve it in O(nk)?
+
+**[题目链接]()**  
+**Solution**  
+**思路**  
+动态规划。
+dp[i][j]: 以i, j结尾的最小值。  
+dp[i][j] = min(dp[i - 1][k],  k != j) + costs[i][j]。也就是说dp[i][j]取决于上一层除j以外的最小值。  
+优化1：查找除j以外的最小值，维护两个数组，第一个存从左到右的最小值，第二个存从右到左的最小值。`INT_MAX, 14, 2`和`5, 11, INT_MAX`，这样j位置的最小值是两个数组中j位置最小的哪一个。  
+进一步优化：j位置只可能取两个值中的一个，上一层的最小值或次小值。若上一层中j位置最小，则取次小值，否则取最小值。以上一层为`[1, 2, 3, 4, 5, 6, 7]`为例， 则取法为`[2, 1, 1, 1, 1, 1, 1]`,若长度k，则应有k - 1个位置取最小值，1个位置取次小值。
+优化3： 滚动数组，space O(K)
+
+**代码**   
+```
+public class Solution {
+    /**
+     * @param costs n x k cost matrix
+     * @return an integer, the minimum cost to paint all houses
+     */
+    public int minCostII(int[][] costs) {
+        // Write your code here
+        if (costs == null || costs.length == 0|| costs[0] == null || costs[0].length == 0) {
+            return 0;
+        }
+        int m = costs.length;
+        int k = costs[0].length;
+        //int[][] dp = new int[m][k];
+        int[][] dp = new int[2][3];
+        int[] min = getmin(costs[0]);
+        dp[0][0] = min[0];
+        dp[0][1] = min[1];
+        dp[0][2] = min[2];
+        for (int i = 1; i < m; i++) {
+            //int[][] minM = getMin(dp[i - 1]);
+            dp[i % 2][0] = Integer.MAX_VALUE;
+            dp[i % 2][1] = Integer.MAX_VALUE;
+            dp[i % 2][2] = -1;
+            for (int j = 0; j < k; j++) {
+                int value = 0;
+                if (j == dp[(i - 1) % 2][2]) {
+                    value = dp[(i - 1) % 2][1] + costs[i][j];
+                } else {
+                    value = dp[(i - 1) % 2][0] + costs[i][j];
+                }
+                System.out.println(value + " " + i + " " + j);
+                if (value < dp[i % 2][0] ) {
+                    dp[i % 2][1] = dp[i % 2][0];
+                    dp[i % 2][0] = value;
+                    dp[i % 2][2] = j;
+                } else if (value < dp[i % 2][1]) {
+                    dp[i % 2][1] = value;
+                }
+            }
+        }
+        return dp[(m - 1) % 2][0];
+    }
+    public int[] getmin(int[] A) {
+        int[] min = new int[3];
+        min[0] = Integer.MAX_VALUE;
+        min[1] = Integer.MAX_VALUE;
+        for (int i  = 0; i < A.length; i++) {
+            if (A[i] < min[0]) {
+                min[1] = min[0];
+                min[0] = A[i];
+                min[2] = i;
+            } else if (A[i] < min[1]) {
+                min[1] = A[i];
+            }
+        }
+        return min;
+    }
+    public int[][] getMin(int[] A) {
+        int[][] re = new int[2][A.length];
+        int minLeft =  Integer.MAX_VALUE;
+        int minRight =  Integer.MAX_VALUE;
+        for (int i = 0; i < A.length; i++) {
+            re[0][i] = minLeft;
+            minLeft = Math.min(minLeft, A[i]);
+        }
+        for (int j = A.length - 1; j >= 0; j--) {
+            re[1][j] = minRight;
+            minRight = Math.min(minRight, A[j]);
+        }
+        return re;
+    }
+}
+```
+**另一种写法，类似于迭代了**
+```
+public class Solution {
+    /**
+     * @param costs n x k cost matrix
+     * @return an integer, the minimum cost to paint all houses
+     */
+    public int minCostII(int[][] costs) {
+        // Write your code here
+        if (costs == null || costs.length == 0|| costs[0] == null || costs[0].length == 0) {
+            return 0;
+        }
+        int m = costs.length;
+        int k = costs[0].length;
+        int prevFirst = 0;
+        int prevSecond = 0;
+        int prevIndex = -1;
+        for (int i = 0; i < m; i++) {
+            int currentFirst = Integer.MAX_VALUE;
+            int currentSecond = Integer.MAX_VALUE;;
+            int currentIndex = -1;
+            for (int j = 0; j < k; j++) {
+                int value = 0;
+                if (j == prevIndex) {
+                    value = prevSecond + costs[i][j];
+                } else {
+                    value = prevFirst + costs[i][j];
+                }
+                if (value < currentFirst) {
+                    currentSecond = currentFirst;
+                    currentFirst = value;
+                    currentIndex = j;
+                } else if (value < currentSecond) {
+                    currentSecond = value;
+                }
+            }
+            prevFirst = currentFirst;
+            prevSecond = currentSecond;
+            prevIndex = currentIndex;
+        }
+        return prevFirst;
+    }
+}
+```
+* * *
