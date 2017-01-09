@@ -114,7 +114,7 @@ public class Solution {//divdie and conquer
 __Description__   
 Given an array of integers, find two non-overlapping subarrays which have the largest sum.
 The number in each subarray should be contiguous.
-Return the largest sum.
+Return the largest sum.   
 __Solution__   
 分别从left和right两个方向求Maximum subArray, 对当前i, 左侧的maxSubArray + 右侧的maxSubArray
 ```java
