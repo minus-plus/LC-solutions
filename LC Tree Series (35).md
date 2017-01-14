@@ -2167,63 +2167,13 @@ public class Solution {
 
 **Solution**   
 **思路**  
-修改：  
-Binary Tree的preorder and postorder tranversal应该是类似的，之前的思路逻辑性太差了。   
-套用preorder的模板，但在将current.val加入result之前，先检验是否已经访问children。  
+Ieration:  节点的访问顺序是先 left subtree, right subtree, root.  因此给出一个root，要先将left subtree的left child入栈， left subtree之后，再访问以root.right为root的subtree.     
+访问过程中，天然包含先左后右的顺序，即所有左子树的节点被pop出之后才能到达root节点，也就是说current = stack.peek(), 此时，current节点的左子树的所有节点均已被访问。  
+因此，root的节点和right subtree的访问顺序都在left subtree之后没问题。问题的关键是如何保证和判断right subtree已经被访问。这里我用 `current.right  == null || current.right == prev`来判断，若满足这个条件，说明左子树均已被访问，若不满则继续访问右子树。   
 
-prev可能的三种情况。
-* right child, if current.right != null
-* left child, if current.right == null && current.left != null
-* ancestor.left, ancecstor is the nearest ancestor whoes left child != null  
-左右子树没有访问，要先访问children入栈。均被访问，pop()
 
-**代码**   
+**代码**   
 **Iterative**
-```java
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode(int x) { val = x; }
- * }
- */
-public class Solution {
-    public List<Integer> postorderTraversal(TreeNode root) {
-        List<Integer> result = new ArrayList();
-        if (root == null) {
-            return result;
-        }
-        
-        Stack<TreeNode> stack = new Stack();
-        stack.push(root);
-        TreeNode prev = new TreeNode(-1);
-        while (!stack.empty()) {
-            TreeNode current = stack.peek();
-            // if all children are visited
-            if (current.left == null && current.right == null ||
-                prev == current.right || prev == current.left) {
-                // current has no children or back from children
-                stack.pop();
-                result.add(current.val);
-                prev = current;
-            } else {
-                // children are not visited
-                if (current.right != null) {
-                    stack.push(current.right);
-                }
-                if (current.left != null) {
-                    stack.push(current.left);
-                }
-            }
-        }
-        return result;
-    }
-}
-```
-**Iterative**
-**思路1. 后续遍历每个节点被访问两次，第一次left and right没有被访问，第二次是left和right都已经被访问。而且要再第二次重新返回到节点时将节点加入到结果中。**
 ```java
 /**
  * Definition for a binary tree node.
@@ -2241,78 +2191,31 @@ public class Solution {
             return result;
         }
         Stack<TreeNode> stack = new Stack<TreeNode>();
-        stack.push(root);
+        TreeNode current = root;
         TreeNode prev = null;
-        while (!stack.empty()) {
-            TreeNode current = stack.peek();
-            if (current.right == null && current.left == null || 
-                prev != null && (prev == current.right || prev == current.left)) {
-                // back from child
-                stack.pop();
+        while (current != null || !stack.empty()) {
+            while (current != null) {
+                stack.push(current);
+                current = current.left;
+            }
+            current  = stack.peek();
+            // check if current.right has been visited or not
+            if (current.right == null || current.right == prev) {
+                // visit current node
                 result.add(current.val);
+                stack.pop();
                 prev = current;
-            } else {
-                if (current.right != null) {
-                    stack.push(current.right);
-                }
-                if (current.left != null) {
-                    stack.push(current.left);
-                }
+                current = null; // indicating current subtree has been traversed
+            } else { 
+                // if current right has not been visited yet, start to traverse right subtree
+                current = current.right;   
             }
         }
         return result;
     }
 }
 ```
-**思路2. 将遍历过程分为从parent到child，从left返回，从right返回。从left返回后遍历right，从right返回后将节点pop.**
-```java
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode(int x) { val = x; }
- * }
- */
-public class Solution {
-    public List<Integer> postorderTraversal(TreeNode root) {
-        ArrayList<Integer> list = new ArrayList<Integer> ();
-        Stack<TreeNode> stack = new Stack<TreeNode> ();
-        if (root == null) return list;
-        
-        TreeNode prev = new TreeNode (-1);
-        prev.left = root;
-        TreeNode current = root;
-        stack.add(root);
-        
-        while (!stack.empty()) {
-            current = stack.peek();
-            if (prev != null && (prev.left == current || prev.right == current)) {
-                // come from parent
-                if (current.left != null) {
-                    stack.add(current.left);
-                    prev = current;
-                } else {
-                    prev = null;
-                }
-            } else if (current.left == prev) {
-                // come back from left
-                if (current.right != null) {
-                    stack.add(current.right);
-                } 
-                prev = current;
-            } else  {
-                // come back from right
-                list.add(current.val);
-                stack.pop();
-                prev = current;
-            }
-        }
-        return list;
-    }
-}
-```
+
 **Recursive**
 ```java
 /**
