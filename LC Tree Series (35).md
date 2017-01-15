@@ -1348,6 +1348,62 @@ public class Solution {// start always == 0
     }
 }
 ```
+OR
+```java
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public TreeNode divideConquer(ListNode head, int length) {
+        if (length == 0) {
+            return null;
+        }
+        if (length == 1) {
+            return new TreeNode(head.val);
+        }
+        int mid = (length + 1) / 2;
+        int index = 1;
+        ListNode current = head;
+        while (index < mid) {
+            index++;
+            current = current.next;
+        }
+        TreeNode root = new TreeNode(current.val);
+        TreeNode left = divideConquer(head, mid - 1);
+        TreeNode right = divideConquer(current.next, length - mid); // mid + 1
+        root.left = left;
+        root.right = right;
+        return root;
+    }
+
+    public TreeNode sortedListToBST(ListNode head) {
+        if (head == null) {
+            return null;
+        }
+        int length = 0;
+        ListNode current = head;
+        while (current != null) {
+            length++;
+            current = current.next;
+        }
+        return divideConquer(head, length);
+    }
+}
+```
 
 * * * 
 
@@ -1384,7 +1440,8 @@ public class Solution {
         }
         // recursive relations: 
         int left = maxDepth(root.left);
-        int right = maxDepth(root.right);
+        int right = maxDepth(root.right); 
+	// bad code here, why? if left < 0, we don't need to search maxDepth(root.right) anymore.
         if (left < 0 || right < 0 || Math.abs(left - right) > 1) {
             return -1;
         }
