@@ -1,4 +1,4 @@
-# Palindrome 系列
+# Palindrome Series(7)
 5 Longest Palindromic Substring  
 9 Palindrome Number  
 125 Valid Palindrome  
