@@ -43,7 +43,8 @@ HashMap记录元素的index + two pointers扫描。
 思路2. two pointer。对于 j,  j++直到找到一个match，更新min。然后i++，如此循环。 
 
 **代码**   
-**two pointer**  
+**two pointer**   
+**bad coding style**   
 ```java
 public class Solution {
     public int lengthOfLongestSubstring(String s) {
@@ -87,6 +88,30 @@ public class Solution {
             }
             pointer2++;
         }
+        return max;
+    }
+}
+```
+**better implementation**  
+```java
+public class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        int[] map = new int[256];
+        Arrays.fill(map, -1);
+        int i = 0;
+        int j = 0;
+        int max = 0;
+        while (j < s.length()) {
+            char c = s.charAt(j);
+            if (map[c] >= i){
+                max = Math.max(max, j - i);
+                i = map[c] + 1;
+                //System.out.println(i);
+            }
+            map[c] = j;
+            j++;
+        }
+        max = Math.max(max, j - i);
         return max;
     }
 }
