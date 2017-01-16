@@ -31,7 +31,7 @@ A solution set is:
 
 **Solution**  
 **思路**  
-dfs + pos。
+dfs + pos。 
 题中规定每个数可以被添加无限多次，且数组中不含重复值，可以用记录下一个可用pos的方法避免重复添加已经加入的数。  
 ```java
 public class Solution { 
