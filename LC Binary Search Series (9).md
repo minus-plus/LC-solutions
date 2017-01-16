@@ -1,7 +1,7 @@
 33 Search in Rotated Sorted Array  
 34 Search for a Range  
 35 Search Insert Position  
-69 Sqrt(x)  
+69 Sqrt(x)   
 74 Search a 2D Matrix  
 81 Search in Rotated Sorted Array II  
 153 Find Minimum in Rotated Sorted Array  
