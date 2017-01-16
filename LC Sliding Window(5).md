@@ -172,6 +172,53 @@ public class Solution {
     }
 }
 ```
+**one pass method** 
+```java
+public class Solution {
+    public String minWindow(String s, String t) {
+        // corner case
+        
+        int[] map = new int[256];
+        boolean[] set = new boolean[256];
+        for (int i = 0; i < t.length(); i++) {
+            char c = t.charAt(i);
+            map[c] += 1;
+            set[c] = true;
+        }
+        int count = t.length();
+        int j = 0;
+        int i = 0;
+        int minIndex = 0;
+        int minLen = Integer.MAX_VALUE;
+        while (j < s.length() || count == 0) {
+            if (count > 0) {
+                char c = s.charAt(j);
+                if (set[c] && map[c]> 0) {
+                    count--;
+                }
+                map[c]--;
+                j++;
+            } else {
+                if (j - i + 1 < minLen) {
+                    minLen = j - i + 1;
+                    minIndex = i;
+                }
+                char c = s.charAt(i);
+                if (set[c] && map[c] == 0) {
+                    count++;// invalid
+                }
+                map[c]++;
+                i++;
+            }
+        }
+        if (minLen == Integer.MAX_VALUE) {
+            return "";
+        }
+        return s.substring(minIndex, minIndex + minLen - 1);
+        
+    }
+}
+```
 * * *
 #### 209. Minimum Size Subarray Sum  
 
@@ -193,19 +240,18 @@ public class Solution {
         if (nums == null || nums.length == 0) {
             return 0;
         }
-        int m = nums.length;
         int min = Integer.MAX_VALUE;
         int sum = 0;
+        int i = 0;
         int j = 0;
-        for (int i = 0; i < nums.length; i++) {
-            while (j < nums.length && sum < s) {
-                sum += nums[j];
-                j++;
+        while (j < nums.length) {
+            sum += nums[j];
+            j++;
+            while (sum >= s) {
+                min = Math.min(min, j - i);
+                sum -= nums[i];
+                i++;
             }
-            if (sum >= s) {
-                min=  Math.min(min, j - i);
-            }
-            sum -= nums[i];
         }
         return min == Integer.MAX_VALUE ?  0 : min;
     }
@@ -333,6 +379,37 @@ public class Solution340 {
         System.out.println("result is " + s.findKDistinct("ecebcda", 3) + ", should be " + 5); // ecebcb. ecb. 5
         System.out.println("result is " + s.findKDistinct("ecebcbda", 3) + ", should be " + 6); // ecebcb. ecb. 6
         System.out.println("result is " + s.findKDistinct("ecebcbdaaaaa", 3) + ", should be " + 7); // bdaaaaa. bda. 7
+    }
+}
+```
+** better implementation**  
+```java
+public class Solution {
+    public int lengthOfLongestSubstringKDistinct(String s, int k) {
+        // corner case
+        int[] map = new int[256];
+        int count = 0;
+        int i = 0;
+        int j = 0;
+        int max = -1;
+        while (j < s.length()) {
+            if (map[s.charAt(j)] == 0) {
+                count++;
+            } 
+            map[s.charAt(j)]++;
+            j++;
+            while (count == k + 1) {
+                max = Math.max(max, j - 1 - i);
+                map[s.charAt(i)]--;
+                if (map[s.charAt(i)] == 0) {
+                    count--;
+                }
+                i++;
+            }
+        }
+        max = Math.max(max, j - i);
+        return max;
+        
     }
 }
 ```
