@@ -22,7 +22,7 @@ LintCode Coins in a Line II
 LintCode Coins in a Line III  
 LintCode Stone Game
 LintCode Paint House
-LintCode Paint House II
+LintCode Paint House II  
 
 * * * 
 Minimum / Maximum  
