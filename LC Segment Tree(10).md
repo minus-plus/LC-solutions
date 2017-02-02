@@ -178,25 +178,31 @@ or call modify(root, 4, 0), we can get:
  */
 public class Solution {
     /**
-     *@param root, index, value: The root of segment tree and 
-     *@ change the node's value with [index, index] to the new given value
-     *@return: void
+     *@param root, start, end: The root of segment tree and 
+     *                         an segment / interval
+     *@return: The maximum number in the interval [start, end]
      */
-    public void modify(SegmentTreeNode root, int index, int value) {
+    public int query(SegmentTreeNode root, int start, int end) {
         // write your code here
-        if (root.start == root.end) {
-            root.max = value;
-            return;
+        if (root == null || start > root.end || end < root.start) {
+            return Integer.MIN_VALUE;
+        }
+        if (start <= root.start && end >= root.end) {
+            return root.max;
         }
         int mid = (root.start + root.end) / 2;
-        if (index <= mid) {
-            modify(root.left, index, value);
+        if (end < mid + 1) {
+            return query(root.left, start, end);
+        } else if (start > mid) {
+            return query(root.right, start, end);
         } else {
-            modify(root.right, index, value);
+            int left = query(root.left, start, mid);
+            int right = query(root.right, mid + 1, end);
+            
+            return Math.max(left, right);
         }
-        root.max = Math.max(root.left.max, root.right.max);
+    
     }
-}
 ```
 * * *
 #### 205. Interval Minimum Number
@@ -231,9 +237,9 @@ class SegmentNode {
      public SegmentNode(int start, int end, int min) {
          this.start = start;
          this.end = end;
+         this.min = min;
          this.left = null;
          this.right = null;
-         this.min = min;
      }
 }
 public class Solution {
@@ -270,20 +276,21 @@ public class Solution {
         return root;
     }
     public int query(SegmentNode root, int start, int end) {
-        if (start == root.start && end == root.end || root.start == root.end) {
+        if (start <= root.start && end >= root.end) {
             return root.min;
         }
         
         int mid = (root.start + root.end) / 2;
-        if (start <= mid && end >= mid + 1) {
+        if (end < mid + 1) {
+            return query(root.left, start, end);
+        } else if (start > mid) {
+            return query(root.right, start, end);
+        } else {
             int left = query(root.left, start, mid);
             int right = query(root.right, mid + 1, end);
             return Math.min(left, right);
         }
-        if (end <= mid) {
-            return query(root.left, start, end);
-        }
-        return query(root.right, start, end);
+       
     }
 }
 ```
@@ -293,7 +300,8 @@ public class Solution {
 **Description**   
 >Given an integer array (index from 0 to n-1, where n is the size of this array), and an query list. Each query has two integers [start, end]. For each query, calculate the sum number between index start and end in the given array, return the result list.
 >Example
-> For array [1,2,7,8,5], and queries [(0,4),(1,2),(2,4)], return [23,9,20]
+> For array [1,2,7,8,5], and queries [(0,4),(1,2),(2,4)], return [23,9,20]   
+
 **[题目链接](https://www.lintcode.com/en/problem/interval-sum/#)**  
 **Solution**  
 **思路**  
@@ -301,6 +309,28 @@ Segment Tree.
 
 **代码**   
 ```java
+/**
+ * Definition of Interval:
+ * public classs Interval {
+ *     int start, end;
+ *     Interval(int start, int end) {
+ *         this.start = start;
+ *         this.end = end;
+ *     }
+ */
+class SegmentNode {
+     int start;
+     int end;
+     long sum;
+     SegmentNode left;
+     SegmentNode right;
+     public SegmentNode(int start, int end, long sum) {
+         this.start = start;
+         this.end = end;
+         this.left = null;
+         this.right = null;
+         this.sum = sum;
+     }
 /**
  * Definition of Interval:
  * public classs Interval {
@@ -353,25 +383,24 @@ public class Solution {
         root.left = left;
         root.right = right;
         root.sum = left.sum + right.sum;
-        //System.out.println(start + " " + end + " " + root.min);
         return root;
     }
     public long query(SegmentNode root, int start, int end) {
-        if (start == root.start && end == root.end || root.start == root.end) {
+        if (start <= root.start && end >= root.end) {
             return root.sum;
         }
-        
         int mid = (root.start + root.end) / 2;
-        if (start <= mid && end >= mid + 1) {
+        if (end < mid + 1) {
+            return query(root.left, start, end);
+        } else if (start > mid) {
+            return query(root.right, start, end);
+        } else {
             long left = query(root.left, start, mid);
             long right = query(root.right, mid + 1, end);
             return left + right;
         }
-        if (end <= mid) {
-            return query(root.left, start, end);
-        }
-        return query(root.right, start, end);
     }
+
 }
 
 ```
