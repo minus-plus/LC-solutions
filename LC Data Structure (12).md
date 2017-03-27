@@ -975,53 +975,40 @@ public class NestedIterator implements Iterator<Integer> {
  * public class Interval {
  *     int start;
  *     int end;
+/**
+ * Definition for an interval.
+ * public class Interval {
+ *     int start;
+ *     int end;
  *     Interval() { start = 0; end = 0; }
  *     Interval(int s, int e) { start = s; end = e; }
  * }
  */
 public class SummaryRanges {
-    TreeMap<Integer, Interval> map;
+    private TreeMap<Integer, Interval> map;
     /** Initialize your data structure here. */
     public SummaryRanges() {
         map = new TreeMap();
     }
     
     public void addNum(int val) {
-        Integer c = map.ceilingKey(val); //get the entry with key > val
-        Integer f = map.floorKey(val);  // get the entry with key <= val
-        Interval ceil = c != null ? map.get(c) : null;
-        Interval floor = f != null ? map.get(f) : null;
-        if (floor == null) {
-            if (ceil == null || ceil.start > val + 1) {
-                map.put(val, new Interval(val, val));
+        Integer f = map.floorKey(val);
+        Integer c = map.ceilingKey(val);
+        Interval floor = f == null ? null : map.get(f);
+        Interval ceil = c == null ? null : map.get(c);
+        
+        if (floor != null && val <= floor.end + 1) {
+            if (ceil != null && val == ceil.start - 1) {
+                floor.end = ceil.end;
+                map.remove(ceil.start);
             } else {
-                ceil.start = Math.min(val, ceil.start);
+                floor.end = Math.max(floor.end, val);
             }
-        } else if (ceil == null) {
-            if (val == floor.end + 1) {
-                //add val into floor
-                floor.end = val;
-            } else if (val > floor.end + 1) {
-                map.put(val, new Interval(val, val));
-            }
+        } else if (ceil != null && val == ceil.start - 1) {
+            map.put(val, new Interval(val, ceil.end));
+            map.remove(ceil.start);
         } else {
-            if (val <= floor.end) {
-                // do nothing
-            } else if (val == floor.end + 1) {
-                if (val == ceil.start - 1) {
-                    // merge
-                    floor.end = ceil.end;
-                    map.remove(ceil.start);
-                } else {
-                    floor.end = val;
-                }
-            } else {
-                if (val < ceil.start - 1) {
-                    map.put(val, new Interval(val, val));
-                } else {
-                    ceil.start = val;
-                }
-            }
+            map.put(val, new Interval(val, val));
         }
     }
     
@@ -1036,6 +1023,5 @@ public class SummaryRanges {
  * obj.addNum(val);
  * List<Interval> param_2 = obj.getIntervals();
  */
-```
 * * *
 
