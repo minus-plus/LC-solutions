@@ -67,7 +67,7 @@ while (current != null || !stack.empty()) {
 }
 ```
 
-这是因为，上述方法是用stack模拟的仅仅是节点的访问顺序，而非代码的执行过程。代码的执行过程，递归调用时，要将context全部入栈，包括参数合program counter(pc)，PC记录了当前context的下一条指令。要模拟递归程序的递归过程，要将上下文全部入栈，可以用一个数组存储上下文，并用一个integer作为pc。
+这是因为，上述方法是用stack模拟的仅仅是节点的访问顺序，而非代码的执行过程。在代码的执行过程中，递归调用时，要将context全部入栈，包括参数和Program Counter(PC)，PC记录了当前context的下一条指令。要模拟递归程序的调用过程，要将context全部入栈，可以用一个数组存储context，并用一个Integer作为PC。
 ```
 stack
 postorder:　0-left, 1-right, 2-current
@@ -96,7 +96,7 @@ postorder:　0-left, 1-right, 2-current
 
 ```
 
-对于本问题，可以不用存储数组和pc,用入栈顺序可以模拟上下文和pc。
+对于本问题，可以不用存储数组和PC,用current.val, current.left, current.right模拟context, 用入栈顺序模拟PC。
 #### preorder
 
 ```
