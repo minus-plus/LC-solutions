@@ -183,7 +183,7 @@ public class Solution {
 }
 ```
 
-#### psotorder
+#### postorder
 ```
 /**
  * Definition for a binary tree node.
