@@ -127,6 +127,60 @@ public class Solution {
     }
 }
 ```
+
+more elegant method
+
+```
+class Solution {
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        List<List<Integer>> result = new ArrayList<List<Integer>>();
+        if (candidates == null || candidates.length == 0 || target <= 0) {
+            return result;
+        }
+        
+        List<Integer> path = new ArrayList<Integer>();
+        Arrays.sort(candidates);
+        dfs(candidates, target, 0, path, result);
+        return result;
+    }
+    
+    
+     public void dfs(int[] candidates, int target, int pos, List<Integer> path, List<List<Integer>> result) {
+        // goal node
+        if (target == 0) {
+            result.add(new ArrayList<Integer>(path));
+            return;
+        }
+        if (pos == candidates.length) {
+            return;
+        }
+        // add current to path
+        if (candidates[pos] <= target) {
+            path.add(candidates[pos]);
+            // skip duplicates
+            
+            dfs(candidates, target - candidates[pos], pos + 1, path, result);
+            path.remove(path.size() - 1);
+        }
+         
+        int nextPos = pos + 1;
+        while (nextPos < candidates.length) {
+            if (candidates[nextPos] == candidates[pos]) {
+                nextPos++;
+            } else {
+                break;
+            }
+        }
+       
+        
+        // do not add current to path
+        dfs(candidates, target, nextPos, path, result);
+        
+    }
+    
+}
+
+```
 ---
 #### 51. N-Queens 
 
