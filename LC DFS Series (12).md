@@ -408,6 +408,45 @@ public class Solution {
     }
 }
 ```
+
+```java
+public class Solution {
+    public void dfs(int[] nums, 
+                     int current, 
+                     List<List<Integer>> result, 
+                     List<Integer> path) {
+        if(current == nums.length) {
+           result.add(new ArrayList<Integer>(path));
+           return;
+        }
+        
+        path.add(nums[current]);
+        dfs(nums, current + 1, result, path);
+        path.remove(path.size() - 1);
+        
+        // 
+        int nextPos = current + 1;
+        while (nextPos < nums.length) {
+            if (nums[nextPos] == nums[current]) {
+                nextPos++;
+            } else {
+                break;
+            }
+        }
+        
+        dfs(nums, nextPos, result, path);
+        
+        
+    }
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> result = new ArrayList();
+        List<Integer> path = new ArrayList<Integer>();
+        dfs(nums, 0, result, path);
+        return result;
+    }
+}
+```
 __Bit manipulation__    
 ```java
 public class Solution {
