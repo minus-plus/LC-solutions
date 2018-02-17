@@ -621,47 +621,54 @@ public class Solution {
 
 **代码**   
 ```java
-public class Solution {
-    class PointComparator implements Comparator<int[]> {
-        @Override 
-        public int compare(int[] a, int[] b) {
-            if (a[0] != b[0]) {
-                return a[0] - b[0];
-            } else if (a[2] != b[2]) {
-                return a[2] - b[2];
-            } else if (a[2] == 1) {
-                return a[1] - b[1];
+class Solution {
+    class PComparator implements Comparator<int[]> {
+        @Override
+        public int compare(int[] p1, int[] p2) {
+            if (p1[0] != p2[0]) {
+                return p1[0] - p2[0];
+            } else if (p1[2] != p2[2]) {
+                // both are start or end
+                return p2[2] - p1[2];
+            } else if (p1[2] == 0) {
+                return p2[1] - p1[1];
             } else {
-                return b[1] - a[1];
+                return p1[1] - p2[1];
             }
         }
     }
+    
     public List<int[]> getSkyline(int[][] buildings) {
-        List<int[]> result = new ArrayList<int[]>();
+        // corner case
+        List<int[]> list = new ArrayList<int[]>();
         if (buildings == null || buildings.length == 0 || buildings[0] == null || buildings[0].length == 0) {
-            return result;
+            return list;
         }
-        List<int[]> cps = new ArrayList<int[]>();
-        for (int[] b : buildings) {
-            cps.add(new int[]{b[0], b[2], 0});
-            cps.add(new int[]{b[1], b[2], 1});
-        }
-        Collections.sort(cps, new PointComparator());
         PriorityQueue<Integer> heights = new PriorityQueue<Integer>(10, Collections.reverseOrder());
-        for (int[] p : cps) {
-            if (p[2] == 0) {
-                if (heights.isEmpty() || p[1] > heights.peek()) {
-                    result.add(new int[]{p[0], p[1]});
-                }
-                heights.add(p[1]);
-            } else {
-                heights.remove(p[1]);
-                if (heights.isEmpty() || p[1] > heights.peek()) {
-                    result.add(new int[] {p[0], heights.isEmpty() ? 0 : heights.peek()});
-                } 
-            }
+        List<int[]> cps = new ArrayList<int[]>();
+        
+        for (int[] b : buildings) {
+            cps.add(new int[] {b[0], b[2], 0});
+            cps.add(new int[] {b[1], b[2], 1});
         }
-        return result;
+        Collections.sort(cps, new PComparator());
+       
+        heights.offer(0);
+        for (int[] cp : cps) {
+            int hPrev = heights.peek();
+            if (cp[2] == 0) {
+                heights.offer(cp[1]);
+            } else {
+                heights.remove(cp[1]);                
+            } 
+            
+            int hAfter = heights.peek();
+            if (hAfter != hPrev) {
+                list.add(new int[] {cp[0], hAfter});
+            }            
+        }
+        
+        return list;
     }
 }
 ```
